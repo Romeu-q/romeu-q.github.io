@@ -1,0 +1,810 @@
+/* ==========================================================================
+   style.css — Pixel Shop
+   Visual: arcade/CRT em azul-marinho e roxo, paleta curta estilo NES/GameBoy.
+   Mobile-first: o CSS base é o do celular; @media (min-width) amplia.
+   ========================================================================== */
+
+/* ---------- Paleta e tokens ----------
+   Paleta pequena de propósito: limitar cores é parte do estilo pixel art.
+   Contraste (WCAG AA): --texto (#f1ecff) e --suave (#c4b9f0) sobre --fundo e
+   --painel passam de 7:1; o texto escuro (--fundo) sobre amarelo passa de 11:1. */
+:root {
+  --fundo: #120b2b;
+  --painel: #1f1547;
+  --painel-2: #2b1d63;
+  --borda: #7c5cff;
+  --texto: #f1ecff;
+  --suave: #c4b9f0;
+  --amarelo: #ffd23f;
+  --rosa: #ff6fae;
+  --ciano: #3df5d0;
+  --erro: #ff8a8a;
+
+  --pixel: 4px; /* espessura da "borda de pixel" */
+  --fonte-titulo: 'Press Start 2P', 'Courier New', monospace;
+  --fonte-corpo: 'VT323', 'Courier New', monospace;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--fundo);
+  color: var(--texto);
+  font-family: var(--fonte-corpo);
+  font-size: 1.3rem; /* VT323 é pequena: precisa de corpo maior para ler bem */
+  line-height: 1.3;
+  overflow-wrap: anywhere; /* evita estourar a largura em 320px */
+}
+
+body.sem-rolagem {
+  overflow: hidden; /* trava a página enquanto um diálogo está aberto */
+}
+
+/* Scanlines de CRT: faixas finas sobre tudo. pointer-events:none para não
+   atrapalhar cliques. Desligadas para quem prefere menos movimento/efeitos. */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 100;
+  background: repeating-linear-gradient(to bottom, rgba(0, 0, 0, 0) 0 2px, rgba(0, 0, 0, 0.16) 2px 3px);
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--fonte-titulo);
+  font-weight: 400;
+  line-height: 1.5;
+  margin: 0;
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  color: var(--ciano);
+}
+
+/* Foco SEMPRE visível: contorno tracejado ciano + sombra escura para
+   funcionar em qualquer fundo. */
+:focus-visible {
+  outline: 3px dashed var(--ciano);
+  outline-offset: 3px;
+}
+
+.pular {
+  position: absolute;
+  left: 8px;
+  top: -80px;
+  z-index: 200;
+  background: var(--amarelo);
+  color: var(--fundo);
+  padding: 8px 12px;
+}
+
+.pular:focus {
+  top: 8px;
+}
+
+/* ---------- Borda de pixel ----------
+   Bordas "em degrau": quatro sombras sólidas (sem blur) deslocadas em cada
+   direção desenham um retângulo com cantos cortados, como num sprite. */
+.pixel-borda,
+.card,
+.botao,
+.filtro,
+.caixa,
+.hero,
+select,
+input[type='text'] {
+  box-shadow:
+    0 calc(var(--pixel) * -1) 0 0 var(--cor-borda, var(--borda)),
+    0 var(--pixel) 0 0 var(--cor-borda, var(--borda)),
+    calc(var(--pixel) * -1) 0 0 0 var(--cor-borda, var(--borda)),
+    var(--pixel) 0 0 0 var(--cor-borda, var(--borda));
+}
+
+/* ---------- Faixa demo ---------- */
+.faixa-demo {
+  background: var(--amarelo);
+  color: var(--fundo);
+  text-align: center;
+  font-size: 1.1rem;
+  padding: 2px 8px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+/* ---------- Topo ---------- */
+#pagina {
+  padding-bottom: 24px;
+}
+
+.topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--painel);
+  border-bottom: var(--pixel) solid var(--borda);
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--amarelo);
+  text-decoration: none;
+}
+
+.logo__texto {
+  font-family: var(--fonte-titulo);
+  font-size: 0.7rem;
+  line-height: 1.5;
+}
+
+/* ---------- Sprites (canvas ampliado sem suavizar) ---------- */
+.sprite {
+  display: block;
+  image-rendering: pixelated; /* o segredo: sem interpolação, pixels nítidos */
+  image-rendering: pixelated;
+  width: 96px; /* 12px do desenho x 8 */
+  height: 96px;
+}
+
+.sprite--logo {
+  width: 36px; /* x3 */
+  height: 36px;
+}
+
+.sprite--mini {
+  width: 48px; /* x4 */
+  height: 48px;
+}
+
+.sprite--grande {
+  width: 192px; /* x16 */
+  height: 192px;
+}
+
+/* ---------- Botões ---------- */
+.botao {
+  --cor-borda: var(--amarelo);
+  font-family: var(--fonte-corpo);
+  font-size: 1.3rem;
+  background: var(--painel-2);
+  color: var(--texto);
+  border: 0;
+  padding: 8px 14px;
+  margin: var(--pixel); /* a borda de pixel é sombra: reserva espaço para ela */
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-align: center;
+}
+
+.botao:hover {
+  background: #5a3fd4; /* mais escuro que --borda: o texto claro precisa de 4,5:1 */
+}
+
+.botao:active {
+  transform: translateY(2px);
+}
+
+.botao--primario {
+  background: var(--amarelo);
+  color: var(--fundo);
+  --cor-borda: #fff;
+  font-weight: 700;
+}
+
+.botao--primario:hover {
+  background: #fff;
+}
+
+.botao--pequeno {
+  font-size: 1.15rem;
+  padding: 4px 10px;
+}
+
+.botao--cheio {
+  width: calc(100% - var(--pixel) * 2);
+}
+
+.botao--perigo {
+  --cor-borda: var(--rosa);
+}
+
+.botao--perigo:hover {
+  background: #7a2150;
+}
+
+.botao[aria-disabled='true'] {
+  background: var(--painel);
+  color: var(--suave);
+  --cor-borda: var(--painel-2);
+  cursor: default;
+}
+
+.selo {
+  background: var(--rosa);
+  color: var(--fundo);
+  min-width: 1.6em;
+  padding: 0 6px;
+  text-align: center;
+  font-weight: 700;
+}
+
+/* ---------- Conteúdo ---------- */
+main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px 16px 0;
+}
+
+.hero {
+  --cor-borda: var(--rosa);
+  background: var(--painel);
+  padding: 24px 16px;
+  margin: var(--pixel);
+  text-align: center;
+  display: grid;
+  justify-items: center;
+  gap: 14px;
+}
+
+.hero__piscando {
+  font-family: var(--fonte-titulo);
+  font-size: 0.8rem;
+  color: var(--amarelo);
+  animation: piscar 1.1s steps(1) infinite; /* steps(1): liga/desliga seco, como num arcade */
+}
+
+@keyframes piscar {
+  50% {
+    opacity: 0;
+  }
+}
+
+.hero__titulo {
+  font-size: 1rem;
+  color: var(--ciano);
+}
+
+.hero__texto {
+  max-width: 34em;
+  color: var(--suave);
+}
+
+.secao-titulo {
+  font-size: 0.95rem;
+  color: var(--amarelo);
+  margin: 32px 0 16px;
+}
+
+/* ---------- Controles ---------- */
+.controles {
+  display: grid;
+  gap: 16px;
+  margin: 0 var(--pixel);
+}
+
+.filtros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.filtro {
+  --cor-borda: var(--borda);
+  font-family: var(--fonte-corpo);
+  font-size: 1.2rem;
+  background: var(--painel);
+  color: var(--texto);
+  border: 0;
+  padding: 2px 10px;
+  margin: var(--pixel);
+  cursor: pointer;
+}
+
+.filtro:hover {
+  background: var(--painel-2);
+}
+
+.filtro[aria-pressed='true'] {
+  background: var(--ciano);
+  color: var(--fundo);
+  --cor-borda: #fff;
+  font-weight: 700;
+}
+
+.ordem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+input::placeholder {
+  color: var(--suave); /* o cinza padrão do navegador não passa AA sobre o painel escuro */
+  opacity: 1;
+}
+
+select,
+input[type='text'] {
+  font-family: var(--fonte-corpo);
+  font-size: 1.2rem;
+  background: var(--painel);
+  color: var(--texto);
+  border: 0;
+  padding: 4px 8px;
+  margin: var(--pixel);
+  max-width: calc(100% - var(--pixel) * 2);
+}
+
+.contagem {
+  color: var(--suave);
+  margin: 16px var(--pixel) 8px;
+}
+
+/* ---------- Grade de cards ---------- */
+.grade {
+  list-style: none;
+  margin: 0;
+  padding: var(--pixel);
+  display: grid;
+  gap: 16px;
+  /* 130px mínimo: em 320px de tela cabem 2 colunas sem rolagem horizontal. */
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+}
+
+.card {
+  background: var(--painel);
+  padding: 8px;
+  display: grid;
+  gap: 6px;
+  align-content: start;
+  justify-items: start;
+  min-width: 0; /* permite o card encolher dentro do grid */
+}
+
+.card:hover {
+  --cor-borda: var(--amarelo);
+}
+
+.card__previa {
+  position: relative;
+  justify-self: center;
+  background: var(--fundo);
+  padding: 6px;
+  width: 100%;
+  display: grid;
+  place-items: center;
+}
+
+.selo-novo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: var(--rosa);
+  color: var(--fundo);
+  font-family: var(--fonte-titulo);
+  font-size: 0.5rem;
+  padding: 3px 4px;
+}
+
+.etiqueta {
+  color: var(--ciano);
+  font-size: 1.05rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.card__nome {
+  font-size: 0.6rem;
+  line-height: 1.6;
+}
+
+.card__abrir {
+  all: unset; /* tira o visual de botão: parece título, mas é focável */
+  cursor: pointer;
+  display: block;
+}
+
+.card__abrir:hover {
+  color: var(--amarelo);
+  text-decoration: underline;
+}
+
+.card__abrir:focus-visible {
+  outline: 3px dashed var(--ciano);
+  outline-offset: 3px;
+}
+
+.preco {
+  color: var(--amarelo);
+  font-size: 1.45rem;
+}
+
+.preco--grande {
+  font-size: 2rem;
+}
+
+/* ---------- Camadas (modal e gaveta) ---------- */
+.camada {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: rgba(8, 4, 24, 0.82);
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  overflow: auto;
+}
+
+.camada[hidden] {
+  display: none;
+}
+
+.caixa {
+  --cor-borda: var(--amarelo);
+  position: relative;
+  background: var(--painel);
+  width: calc(100% - var(--pixel) * 2);
+  max-width: 720px;
+  max-height: calc(100dvh - 32px);
+  overflow: auto;
+  padding: 16px;
+}
+
+.fechar {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 44px;
+  height: 44px; /* alvo de toque confortável */
+  font-family: var(--fonte-corpo);
+  font-size: 2rem;
+  line-height: 1;
+  background: var(--painel-2);
+  color: var(--texto);
+  border: 2px solid var(--borda);
+  cursor: pointer;
+  z-index: 2;
+}
+
+.fechar:hover {
+  background: var(--rosa);
+  color: var(--fundo);
+}
+
+/* Modal */
+.modal__previa {
+  background: var(--fundo);
+  padding: 16px;
+  display: grid;
+  place-items: center;
+  margin: 40px 0 16px; /* 40px: espaço do botão fechar */
+}
+
+.modal__titulo {
+  font-size: 0.9rem;
+  color: var(--ciano);
+  margin: 4px 0 10px;
+}
+
+.modal__sub {
+  font-size: 0.65rem;
+  color: var(--amarelo);
+  margin: 16px 0 8px;
+}
+
+.lista-inclui {
+  margin: 0;
+  padding-left: 0;
+  list-style: none;
+}
+
+.lista-inclui li {
+  padding-left: 1.2em;
+  position: relative;
+}
+
+.lista-inclui li::before {
+  content: '\25A0'; /* quadradinho = "pixel" como marcador */
+  color: var(--rosa);
+  position: absolute;
+  left: 0;
+}
+
+.licenca {
+  margin-top: 12px;
+  color: var(--suave);
+  border-left: var(--pixel) solid var(--borda);
+  padding-left: 10px;
+}
+
+.modal__acao {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  margin-top: 16px;
+}
+
+/* Gaveta: ocupa a lateral direita */
+.camada--gaveta {
+  display: flex;
+  justify-content: flex-end;
+  align-items: stretch;
+  padding: 0;
+}
+
+.camada--gaveta[hidden] {
+  display: none;
+}
+
+.caixa--gaveta {
+  width: min(420px, 100%);
+  max-width: none;
+  max-height: none;
+  height: 100%;
+  margin: 0;
+  box-shadow: calc(var(--pixel) * -1) 0 0 0 var(--amarelo); /* só a borda esquerda */
+  padding: 16px;
+}
+
+.gaveta__titulo {
+  font-size: 0.9rem;
+  color: var(--ciano);
+  margin: 4px 56px 16px 0;
+}
+
+.gaveta__titulo:focus {
+  outline: none; /* foco programático no título; sem contorno para não poluir */
+}
+
+.gaveta__bloco {
+  display: grid;
+  gap: 14px;
+  justify-items: start;
+  padding-top: 4px;
+}
+
+.gaveta__bloco > * {
+  max-width: 100%;
+}
+
+.vazio {
+  color: var(--suave);
+}
+
+.itens {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+  width: 100%;
+}
+
+.item {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 10px;
+  background: var(--fundo);
+  padding: 8px;
+}
+
+.item__nome {
+  line-height: 1.1;
+}
+
+.cupom {
+  width: 100%;
+}
+
+.cupom label {
+  display: block;
+  color: var(--suave);
+}
+
+.cupom__linha {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.cupom__linha input {
+  flex: 1 1 120px;
+  min-width: 0;
+  text-transform: uppercase;
+}
+
+.cupom__msg {
+  min-height: 1.3em;
+  color: var(--ciano);
+}
+
+.cupom__msg--erro {
+  color: var(--erro);
+}
+
+.totais {
+  width: 100%;
+  margin: 0;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 4px 12px;
+}
+
+.totais dt,
+.totais dd {
+  margin: 0;
+}
+
+.totais dd {
+  text-align: right;
+}
+
+.totais .desconto {
+  color: var(--ciano);
+}
+
+.totais dt:last-of-type,
+.totais .total {
+  font-size: 1.6rem;
+  color: var(--amarelo);
+  border-top: 2px dashed var(--borda);
+  padding-top: 6px;
+}
+
+.demo-aviso {
+  color: var(--fundo);
+  background: var(--amarelo);
+  padding: 2px 8px;
+  text-transform: uppercase;
+  font-size: 1.05rem;
+}
+
+/* ---------- Aviso (toast) ---------- */
+.aviso {
+  position: fixed;
+  left: 50%;
+  bottom: 16px;
+  transform: translate(-50%, 20px);
+  width: max-content;
+  max-width: calc(100% - 32px);
+  background: var(--ciano);
+  color: var(--fundo);
+  padding: 8px 14px;
+  z-index: 150;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s steps(3), transform 0.15s steps(3);
+}
+
+.aviso--visivel {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+/* ---------- Rodapé ---------- */
+.rodape {
+  text-align: center;
+  padding: 32px 16px 8px;
+  display: grid;
+  gap: 6px;
+}
+
+.rodape__nota {
+  color: var(--suave);
+  font-size: 1.1rem;
+}
+
+/* ---------- Telas maiores ---------- */
+@media (min-width: 640px) {
+  .topo {
+    padding: 12px 32px;
+  }
+
+  .logo__texto {
+    font-size: 0.85rem;
+  }
+
+  .hero {
+    padding: 48px 32px;
+  }
+
+  .hero__piscando {
+    font-size: 1rem;
+  }
+
+  .hero__titulo {
+    font-size: 1.4rem;
+  }
+
+  .controles {
+    grid-template-columns: 1fr auto;
+    align-items: start;
+  }
+
+  .grade {
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  }
+
+  .card__nome {
+    font-size: 0.65rem;
+  }
+
+  .sprite--grande {
+    width: 240px; /* x20 */
+    height: 240px;
+  }
+
+  .caixa--modal {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 20px;
+    align-items: start;
+    max-width: 780px;
+  }
+
+  .modal__previa {
+    margin: 40px 0 0;
+  }
+
+  .modal__corpo {
+    padding-top: 36px;
+  }
+}
+
+@media (min-width: 1000px) {
+  main {
+    padding-top: 40px;
+  }
+
+  .hero__titulo {
+    font-size: 1.7rem;
+  }
+}
+
+/* ---------- Preferência por menos movimento ----------
+   Desliga o pisca-pisca, as transições e o efeito de scanlines. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  body::after {
+    display: none;
+  }
+
+  .hero__piscando {
+    animation: none;
+  }
+
+  .aviso {
+    transition: none;
+  }
+}

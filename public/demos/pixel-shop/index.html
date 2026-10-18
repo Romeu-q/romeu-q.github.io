@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pixel Shop — packs de pixel art para devs indie (demo)</title>
+  <meta name="description" content="Demo de loja fictícia de packs de pixel art, feita por Romeu com HTML, CSS e JavaScript puros.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&amp;family=VT323&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a class="pular" href="#vitrine">Pular para os packs</a>
+
+  <!-- Faixa fixa lembrando que nada aqui é real -->
+  <p class="faixa-demo">DEMO &middot; loja fictícia &middot; nenhum pagamento real</p>
+
+  <!-- Tudo que fica "atrás" dos diálogos: recebe `inert` quando um está aberto -->
+  <div id="pagina">
+    <header class="topo">
+      <a class="logo" href="#" aria-label="Pixel Shop — início">
+        <span id="logo-sprite" class="logo__sprite"></span>
+        <span class="logo__texto">PIXEL<br>SHOP</span>
+      </a>
+      <button type="button" class="botao botao--carrinho" id="btn-carrinho" aria-haspopup="dialog">
+        <span aria-hidden="true">&#128722;</span>
+        Carrinho
+        <span class="selo" id="selo-carrinho">0</span>
+      </button>
+    </header>
+
+    <main id="conteudo">
+      <section class="hero" aria-labelledby="hero-titulo">
+        <p class="hero__piscando" aria-hidden="true">&#9654; INSERT COIN</p>
+        <h1 id="hero-titulo" class="hero__titulo">Packs de pixel art para devs indie</h1>
+        <p class="hero__texto">Tilesets, personagens, interfaces e efeitos prontos para o seu próximo jogo. Escolha, jogue no projeto e siga criando.</p>
+        <a class="botao botao--primario" href="#vitrine">Ver os packs</a>
+      </section>
+
+      <section class="vitrine" id="vitrine" aria-labelledby="vitrine-titulo">
+        <h2 id="vitrine-titulo" class="secao-titulo">Vitrine</h2>
+
+        <div class="controles">
+          <div class="filtros" role="group" aria-label="Filtrar por categoria" id="filtros"></div>
+          <div class="ordem">
+            <label for="ordem">Ordenar por</label>
+            <select id="ordem">
+              <option value="novos">Mais novos</option>
+              <option value="preco-asc">Preço: menor primeiro</option>
+              <option value="preco-desc">Preço: maior primeiro</option>
+              <option value="nome">Nome (A-Z)</option>
+            </select>
+          </div>
+        </div>
+
+        <p class="contagem" id="contagem" role="status"></p>
+        <ul class="grade" id="grade"></ul>
+      </section>
+    </main>
+
+    <footer class="rodape">
+      <p>Demo feita por Romeu &mdash; <a href="../../index.html">&larr; voltar ao portfólio</a></p>
+      <p class="rodape__nota">Packs, preços e cupons são fictícios. Nenhum dado é enviado a lugar nenhum.</p>
+    </footer>
+  </div>
+
+  <!-- Modal do produto -->
+  <div class="camada" id="camada-modal" hidden>
+    <div class="caixa caixa--modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-titulo" tabindex="-1">
+      <button type="button" class="fechar" data-fechar aria-label="Fechar detalhes">&times;</button>
+      <div class="modal__previa" id="modal-previa"></div>
+      <div class="modal__corpo">
+        <p class="etiqueta" id="modal-categoria"></p>
+        <h2 id="modal-titulo" class="modal__titulo"></h2>
+        <p id="modal-descricao"></p>
+        <h3 class="modal__sub">O que vem no pack</h3>
+        <ul class="lista-inclui" id="modal-inclui"></ul>
+        <p class="licenca"><strong>Licença:</strong> <span id="modal-licenca"></span></p>
+        <div class="modal__acao">
+          <p class="preco preco--grande" id="modal-preco"></p>
+          <button type="button" class="botao botao--primario" id="modal-add"></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gaveta do carrinho -->
+  <div class="camada camada--gaveta" id="camada-gaveta" hidden>
+    <aside class="caixa caixa--gaveta" id="gaveta" role="dialog" aria-modal="true" aria-labelledby="gaveta-titulo" tabindex="-1">
+      <button type="button" class="fechar" data-fechar aria-label="Fechar carrinho">&times;</button>
+      <div id="gaveta-conteudo"></div>
+    </aside>
+  </div>
+
+  <!-- Avisos curtos para leitores de tela e para quem enxerga -->
+  <div class="aviso" id="aviso" role="status" aria-live="polite"></div>
+
+  <script src="data.js"></script>
+  <script src="sprites.js"></script>
+  <script src="cart.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

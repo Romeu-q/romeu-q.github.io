@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Painel de Vendas — Demo</title>
+  <meta name="description" content="Demo de painel administrativo de vendas com dados fictícios, gráficos, tabela com busca e ordenação.">
+
+  <!-- Tema aplicado ANTES do CSS carregar, para não piscar branco quando o usuário
+       prefere escuro. Ordem: escolha salva > preferência do sistema operacional. -->
+  <script>
+    (function () {
+      var tema = null;
+      try { tema = localStorage.getItem('dashboard-tema'); } catch (e) { /* storage bloqueado: segue sem salvar */ }
+      if (tema !== 'dark' && tema !== 'light') {
+        tema = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      }
+      document.documentElement.setAttribute('data-theme', tema);
+    })();
+  </script>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a class="pular-link" href="#conteudo">Ir para o conteúdo</a>
+
+  <div class="app" id="app">
+
+    <!-- ===== Menu lateral ===== -->
+    <nav class="sidebar" id="sidebar" aria-label="Navegação principal">
+      <div class="marca">
+        <svg class="marca__icone" viewBox="0 0 24 24" width="28" height="28" aria-hidden="true" focusable="false">
+          <rect x="2" y="2" width="20" height="20" rx="6" fill="currentColor"/>
+          <path d="M7 16l3-4 3 2 4-6" fill="none" stroke="var(--accent-contrast)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="marca__texto">Loja Aurora</span>
+      </div>
+      <ul class="nav">
+        <li>
+          <a class="nav__link" href="#resumo" aria-current="page">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false"><path d="M3 12l9-8 9 8M5 10v10h5v-6h4v6h5V10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span class="nav__texto">Resumo</span>
+          </a>
+        </li>
+        <li>
+          <a class="nav__link" href="#graficos">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span class="nav__texto">Gráficos</span>
+          </a>
+        </li>
+        <li>
+          <a class="nav__link" href="#pedidos">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span class="nav__texto">Pedidos</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+    <!-- Fundo escuro atrás do menu no celular; clicar nele fecha o menu -->
+    <div class="overlay" id="overlay" aria-hidden="true"></div>
+
+    <div class="coluna">
+      <!-- ===== Barra superior ===== -->
+      <header class="topbar">
+        <button type="button" class="botao-icone" id="botao-menu" aria-controls="sidebar" aria-expanded="true" aria-label="Menu lateral">
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false"><path d="M4 6h16M4 12h16M4 18h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+
+        <h1 class="topbar__titulo">Painel de Vendas</h1>
+
+        <div class="topbar__acoes">
+          <div class="periodo" role="group" aria-label="Período de análise">
+            <button type="button" class="periodo__btn" data-periodo="7" aria-pressed="false">7 dias</button>
+            <button type="button" class="periodo__btn" data-periodo="30" aria-pressed="true">30 dias</button>
+            <button type="button" class="periodo__btn" data-periodo="12m" aria-pressed="false">12 meses</button>
+          </div>
+
+          <a class="topbar__voltar" href="../../index.html">← voltar ao portfólio</a>
+
+          <!-- aria-pressed + rótulo fixo: leitor de tela anuncia "Tema escuro, ligado/desligado" -->
+          <button type="button" class="botao-icone" id="botao-tema" aria-pressed="false" aria-label="Tema escuro">
+            <svg class="icone-lua" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+            <svg class="icone-sol" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </button>
+        </div>
+      </header>
+
+      <main class="principal" id="conteudo" tabindex="-1">
+
+        <!-- ===== KPIs ===== -->
+        <section id="resumo" aria-labelledby="titulo-resumo">
+          <div class="secao-cab">
+            <h2 id="titulo-resumo">Resumo</h2>
+            <p class="secao-nota" id="nota-periodo"></p>
+          </div>
+          <div class="kpis">
+            <article class="card kpi" data-kpi="faturamento">
+              <h3 class="kpi__rotulo">Faturamento</h3>
+              <p class="kpi__valor"></p>
+              <p class="kpi__variacao"></p>
+            </article>
+            <article class="card kpi" data-kpi="pedidos">
+              <h3 class="kpi__rotulo">Pedidos</h3>
+              <p class="kpi__valor"></p>
+              <p class="kpi__variacao"></p>
+            </article>
+            <article class="card kpi" data-kpi="ticket">
+              <h3 class="kpi__rotulo">Ticket médio</h3>
+              <p class="kpi__valor"></p>
+              <p class="kpi__variacao"></p>
+            </article>
+            <article class="card kpi" data-kpi="novos">
+              <h3 class="kpi__rotulo">Novos clientes</h3>
+              <p class="kpi__valor"></p>
+              <p class="kpi__variacao"></p>
+            </article>
+          </div>
+        </section>
+
+        <!-- ===== Gráficos ===== -->
+        <section id="graficos" aria-labelledby="titulo-graficos">
+          <h2 id="titulo-graficos">Gráficos</h2>
+          <div class="graficos">
+            <figure class="card grafico grafico--largo">
+              <figcaption>Faturamento ao longo do tempo</figcaption>
+              <div class="grafico__area"><canvas id="grafico-receita" role="img" aria-label="Gráfico de linha do faturamento"></canvas></div>
+            </figure>
+            <figure class="card grafico">
+              <figcaption>Faturamento por categoria</figcaption>
+              <div class="grafico__area"><canvas id="grafico-categorias" role="img" aria-label="Gráfico de barras do faturamento por categoria"></canvas></div>
+            </figure>
+            <figure class="card grafico">
+              <figcaption>Pedidos por dia da semana</figcaption>
+              <div class="grafico__area"><canvas id="grafico-semana" role="img" aria-label="Gráfico de barras dos pedidos por dia da semana"></canvas></div>
+            </figure>
+          </div>
+        </section>
+
+        <!-- ===== Tabela de pedidos ===== -->
+        <section id="pedidos" aria-labelledby="titulo-pedidos">
+          <div class="secao-cab">
+            <h2 id="titulo-pedidos">Pedidos</h2>
+            <div class="busca">
+              <label for="busca-pedidos">Buscar pedido</label>
+              <input type="search" id="busca-pedidos" placeholder="Nº, cliente, categoria ou status" autocomplete="off">
+            </div>
+          </div>
+
+          <div class="card tabela-card">
+            <!-- Se a tabela for mais larga que a tela, rola AQUI dentro e não a página toda.
+                 tabindex=0 deixa quem usa teclado rolar a região com as setas. -->
+            <div class="tabela-rolagem" role="region" aria-labelledby="titulo-pedidos" tabindex="0">
+              <table class="tabela" id="tabela-pedidos">
+                <caption class="so-leitor">Pedidos do período selecionado. Use os botões dos cabeçalhos para ordenar.</caption>
+                <thead><tr id="tabela-cabecalho"></tr></thead>
+                <tbody id="tabela-corpo"></tbody>
+              </table>
+            </div>
+
+            <div class="paginacao">
+              <p class="paginacao__resumo" id="paginacao-resumo" role="status" aria-live="polite"></p>
+              <div class="paginacao__botoes">
+                <button type="button" class="botao" id="pagina-anterior">Anterior</button>
+                <span class="paginacao__pagina" id="pagina-atual"></span>
+                <button type="button" class="botao" id="pagina-proxima">Próxima</button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="rodape">
+        <a href="../../index.html">← voltar ao portfólio</a>
+        <span>Demo feita por Romeu · dados fictícios</span>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Versão fixada do Chart.js: se a CDN publicar uma versão nova com mudanças,
+       a demo não quebra. Carregado antes dos meus scripts porque eles usam `Chart`. -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="data.js"></script>
+  <script src="charts.js"></script>
+  <script src="table.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

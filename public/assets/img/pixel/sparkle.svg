@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 7 7" width="28" height="28" shape-rendering="crispEdges">
+<!-- sparkle: gerado por tools/pixel2svg.mjs a partir de tools/sprites/decor.txt. Edite a fonte, não este arquivo. -->
+<style>
+#small{opacity:0}
+@media (prefers-reduced-motion: no-preference){
+#big{animation:sparkle-big 1.6s steps(1,end) infinite}
+#small{animation:sparkle-small 1.6s steps(1,end) infinite}
+@keyframes sparkle-big{0%{opacity:1}50%{opacity:0}}
+@keyframes sparkle-small{0%{opacity:0}50%{opacity:1}}
+}
+</style>
+
+<g id="big"><path fill="#fff" d="M3 0h1v1h-1zM3 2h1v1h-1zM0 3h1v1h-1zM2 3h1v1h-1zM4 3h1v1h-1zM6 3h1v1h-1zM3 4h1v1h-1zM3 6h1v1h-1z"/><path fill="#fff6d6" d="M3 1h1v1h-1zM2 2h1v1h-1zM4 2h1v1h-1zM1 3h1v1h-1zM5 3h1v1h-1zM2 4h1v1h-1zM4 4h1v1h-1zM3 5h1v1h-1z"/><path fill="#ffd23f" d="M3 3h1v1h-1z"/></g>
+<g id="small"><path fill="#fff" d="M3 2h1v1h-1zM2 3h1v1h-1zM4 3h1v1h-1zM3 4h1v1h-1z"/><path fill="#ffd23f" d="M3 3h1v1h-1z"/></g>
+</svg>

@@ -1,0 +1,8 @@
+node_modules
+dist
+legacy
+.claude/settings.local.json
+*.tsbuildinfo
+.claude
+curriculo
+SESSAO.md

@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="320" viewBox="0 0 1280 320" role="img" aria-label="Ritmo — DAW de patterns">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#101216"/>
+      <stop offset="1" stop-color="#1a1e24"/>
+    </linearGradient>
+    <linearGradient id="glow" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#3ddc97" stop-opacity="0"/>
+      <stop offset=".5" stop-color="#3ddc97" stop-opacity=".35"/>
+      <stop offset="1" stop-color="#ffb347" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="1280" height="320" rx="24" fill="url(#bg)"/>
+  <!-- step grid -->
+  <g opacity=".55">
+    <g fill="#2a2f36">
+      <rect x="640" y="70" width="36" height="28" rx="5"/><rect x="684" y="70" width="36" height="28" rx="5"/>
+      <rect x="728" y="70" width="36" height="28" rx="5"/><rect x="772" y="70" width="36" height="28" rx="5"/>
+      <rect x="826" y="70" width="36" height="28" rx="5"/><rect x="870" y="70" width="36" height="28" rx="5"/>
+      <rect x="914" y="70" width="36" height="28" rx="5"/><rect x="958" y="70" width="36" height="28" rx="5"/>
+      <rect x="1012" y="70" width="36" height="28" rx="5"/><rect x="1056" y="70" width="36" height="28" rx="5"/>
+      <rect x="1100" y="70" width="36" height="28" rx="5"/><rect x="1144" y="70" width="36" height="28" rx="5"/>
+      <rect x="640" y="108" width="36" height="28" rx="5"/><rect x="684" y="108" width="36" height="28" rx="5"/>
+      <rect x="728" y="108" width="36" height="28" rx="5"/><rect x="772" y="108" width="36" height="28" rx="5"/>
+      <rect x="826" y="108" width="36" height="28" rx="5"/><rect x="870" y="108" width="36" height="28" rx="5"/>
+      <rect x="914" y="108" width="36" height="28" rx="5"/><rect x="958" y="108" width="36" height="28" rx="5"/>
+      <rect x="1012" y="108" width="36" height="28" rx="5"/><rect x="1056" y="108" width="36" height="28" rx="5"/>
+      <rect x="1100" y="108" width="36" height="28" rx="5"/><rect x="1144" y="108" width="36" height="28" rx="5"/>
+      <rect x="640" y="146" width="36" height="28" rx="5"/><rect x="684" y="146" width="36" height="28" rx="5"/>
+      <rect x="728" y="146" width="36" height="28" rx="5"/><rect x="772" y="146" width="36" height="28" rx="5"/>
+      <rect x="826" y="146" width="36" height="28" rx="5"/><rect x="870" y="146" width="36" height="28" rx="5"/>
+      <rect x="914" y="146" width="36" height="28" rx="5"/><rect x="958" y="146" width="36" height="28" rx="5"/>
+      <rect x="1012" y="146" width="36" height="28" rx="5"/><rect x="1056" y="146" width="36" height="28" rx="5"/>
+      <rect x="1100" y="146" width="36" height="28" rx="5"/><rect x="1144" y="146" width="36" height="28" rx="5"/>
+    </g>
+    <g fill="#3ddc97">
+      <rect x="640" y="70" width="36" height="28" rx="5"/><rect x="826" y="70" width="36" height="28" rx="5"/>
+      <rect x="1012" y="70" width="36" height="28" rx="5"/><rect x="1100" y="70" width="36" height="28" rx="5"/>
+    </g>
+    <g fill="#ffb347">
+      <rect x="728" y="108" width="36" height="28" rx="5"/><rect x="914" y="108" width="36" height="28" rx="5"/>
+      <rect x="1100" y="108" width="36" height="28" rx="5"/>
+    </g>
+    <g fill="#5aa9ff">
+      <rect x="684" y="146" width="36" height="28" rx="5"/><rect x="772" y="146" width="36" height="28" rx="5"/>
+      <rect x="870" y="146" width="36" height="28" rx="5"/><rect x="958" y="146" width="36" height="28" rx="5"/>
+      <rect x="1056" y="146" width="36" height="28" rx="5"/><rect x="1144" y="146" width="36" height="28" rx="5"/>
+    </g>
+  </g>
+  <!-- waveform -->
+  <path d="M640 238 C670 200 690 276 720 238 S770 186 800 238 S850 290 880 238 S930 196 960 238 S1010 280 1040 238 S1090 206 1120 238 S1160 262 1180 238"
+        fill="none" stroke="url(#glow)" stroke-width="5" stroke-linecap="round"/>
+  <!-- logo -->
+  <g transform="translate(96 96)">
+    <rect width="128" height="128" rx="30" fill="#121417" stroke="#2d3239" stroke-width="2"/>
+    <rect x="26" y="52" width="16" height="50" rx="8" fill="#3ddc97"/>
+    <rect x="56" y="26" width="16" height="76" rx="8" fill="#3ddc97"/>
+    <rect x="86" y="40" width="16" height="62" rx="8" fill="#ffb347"/>
+  </g>
+  <text x="256" y="168" font-family="Segoe UI, Inter, system-ui, sans-serif" font-size="76" font-weight="700" fill="#e6e8eb" letter-spacing="2">ritmo</text>
+  <text x="260" y="214" font-family="Segoe UI, Inter, system-ui, sans-serif" font-size="24" fill="#8b939e">DAW de patterns · Rust + Tauri</text>
+</svg>

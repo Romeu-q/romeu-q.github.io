@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 5 5" width="20" height="20" shape-rendering="crispEdges">
+<!-- firefly: gerado por tools/pixel2svg.mjs a partir de tools/scenes/decor.mjs. Edite a fonte, não este arquivo. -->
+<style>
+@media (prefers-reduced-motion: no-preference){
+#halo{animation:firefly-pulse 2.4s ease-in-out infinite}
+@keyframes firefly-pulse{0%,100%{opacity:1}50%{opacity:.3}}
+}
+</style>
+<path fill="#ffcb5c" fill-opacity="0.85" d="M2 1h1v1h-1zM1 2h1v1h-1zM3 2h1v1h-1zM2 3h1v1h-1z"/><path fill="#fff3c4" d="M2 2h1v1h-1z"/>
+<g id="halo"><path fill="#ffcb5c" fill-opacity="0.22" d="M2 0h1v1h-1zM0 2h1v1h-1zM4 2h1v1h-1zM2 4h1v1h-1z"/><path fill="#ffcb5c" fill-opacity="0.35" d="M1 1h1v1h-1zM3 1h1v1h-1zM1 3h1v1h-1zM3 3h1v1h-1z"/></g>
+</svg>

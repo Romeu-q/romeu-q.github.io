@@ -1,0 +1,26 @@
+// =====================================================================
+//  LOGO / FAVICON 16x16 — monograma "R" numa bolha aqua brilhante.
+//  Formato dos .txt: veja o cabeçalho de tools/sprites/icons.txt.
+//  O mesmo SVG é escrito em assets/img/pixel/logo.svg e /favicon.svg.
+// =====================================================================
+
+@sprite logo
+@scale 4
+@out public/assets/img/pixel/logo.svg public/favicon.svg
+@grid
+...KKKKKKKKKK...
+..KWWaaaaaaaaK..
+.KWaaaaaaaaaaaK.
+KWaaaaaaaaaaaaaK
+KaaaaWWWWWaaaaaK
+KaaaaWWttWWaaaaK
+KaaaaWWtaWWtaaaK
+KAAAAWWWWWttAAAK
+KAAAAWWtWWtAAAAK
+KAAAAWWtAWWAAAAK
+KAAAAWWtAWWtAAAK
+KAAAAAttAAttAAaK
+KAAAAAAAAAAAAaaK
+.KttttttttttttK.
+..KttttttttttK..
+...KKKKKKKKKK...
