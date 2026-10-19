@@ -16,7 +16,7 @@ export function Footer() {
         ))}
       </ul>
       <p className="m-0 text-sm text-dim">
-        Feito por Romeu com React, Framer Motion e muitos pixels. © {new Date().getFullYear()}
+        Feito por Romeu com React e Framer Motion © {new Date().getFullYear()}
       </p>
     </footer>
   );
