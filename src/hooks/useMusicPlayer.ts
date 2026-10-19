@@ -7,7 +7,8 @@
  *  - Se um vídeo do site começar a tocar (evento `portfolio:media-play`), a música pausa.
  *  - Se os arquivos .mp3 não existirem (ainda não baixados), tenta as outras faixas
  *    e, se todas falharem, avisa com calma e para.
- *  - Preferências (volume e faixa) ficam no localStorage; mesmo que o visitante tenha
+ *  - Sempre começa pela primeira faixa (Terminal Rain), em volume baixo.
+ *  - O volume escolhido fica no localStorage; mesmo que o visitante tenha
  *    saído com a música ligada, ela NÃO volta a tocar sozinha.
  */
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -16,8 +17,9 @@ import { TRACKS } from '../data/playlist';
 // ---------------------------------------------------------------------------
 // Configuração
 // ---------------------------------------------------------------------------
-const STORAGE_KEY = 'romeu.music.v2';
-const DEFAULT_VOLUME = 0.25; // baixo de propósito: ambiente, nunca protagonista
+// v3: chave nova para quem já visitou não ficar preso no volume padrão antigo (0,25)
+const STORAGE_KEY = 'romeu.music.v3';
+const DEFAULT_VOLUME = 0.15; // baixo de propósito: ambiente, nunca protagonista
 const FADE_IN_MS = 2500;
 const FADE_OUT_MS = 600;
 const MEDIA_PLAY_EVENT = 'portfolio:media-play';
@@ -31,9 +33,8 @@ function loadPrefs(): Prefs {
     const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? 'null');
     if (saved && typeof saved === 'object') {
       if (Number.isFinite(saved.volume)) prefs.volume = Math.min(1, Math.max(0, saved.volume));
-      if (Number.isInteger(saved.track) && saved.track >= 0 && saved.track < TRACKS.length) {
-        prefs.track = saved.track;
-      }
+      // A faixa salva NÃO é restaurada: toda visita começa pela primeira da
+      // playlist (Terminal Rain), que é a escolhida para abrir o site.
       if (typeof saved.wasPlaying === 'boolean') prefs.wasPlaying = saved.wasPlaying;
     }
   } catch {

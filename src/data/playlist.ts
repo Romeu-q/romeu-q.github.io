@@ -32,6 +32,14 @@ const CC0 = {
 const SOURCE = 'https://github.com/btahir/open-lofi';
 
 export const TRACKS: Track[] = [
+  // A primeira faixa é sempre a que toca ao ligar o player.
+  {
+    title: 'Terminal Rain',
+    artist: 'Open Lo-Fi',
+    src: 'assets/music/terminal-rain.mp3',
+    ...CC0,
+    sourceUrl: SOURCE,
+  },
   {
     title: '2 AM Debug Loop',
     artist: 'Open Lo-Fi',
@@ -57,13 +65,6 @@ export const TRACKS: Track[] = [
     title: 'Pixel Quest Save Point',
     artist: 'Open Lo-Fi',
     src: 'assets/music/pixel-quest-save-point.mp3',
-    ...CC0,
-    sourceUrl: SOURCE,
-  },
-  {
-    title: 'Terminal Rain',
-    artist: 'Open Lo-Fi',
-    src: 'assets/music/terminal-rain.mp3',
     ...CC0,
     sourceUrl: SOURCE,
   },

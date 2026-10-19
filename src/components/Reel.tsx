@@ -5,12 +5,14 @@ import { announceMediaPlay, icon } from "@/lib/media";
 import { PokeButton } from "./ui/PokeButton";
 import { Reveal } from "./ui/Reveal";
 
-/** Vídeo/GIF de destaque do Verity. */
+/** Gravações de gameplay do Verity: uma aba por gravação. */
 export function Reel() {
   const reduce = useReducedMotion();
-  // GIF não tem controle nativo: alternamos entre o GIF e o print estático.
+  const [active, setActive] = useState(0);
+  // GIF não tem controle nativo: alternamos entre o GIF e um print estático.
   // Com movimento reduzido, começa parado.
   const [playing, setPlaying] = useState(!reduce);
+  const clip = REEL.clips[active];
 
   return (
     <section id="reel" aria-labelledby="reel-title" className="py-12">
@@ -22,11 +24,32 @@ export function Reel() {
         </Reveal>
         <Reveal delay={0.1}>
           <div className="glass mx-auto max-w-[900px] overflow-hidden rounded-xl">
-            <div className="win-titlebar" aria-hidden="true">
-              <span className="win-dots"><i /><i /><i /></span>
-              <span>{REEL.video ? "reel.mp4" : "reel.gif"}</span>
+            <div className="win-titlebar">
+              <span className="win-dots" aria-hidden="true"><i /><i /><i /></span>
+              {REEL.video ? (
+                <span>reel.mp4</span>
+              ) : (
+                // Abas para trocar de gravação (role tab = leitor de tela entende que é um seletor)
+                <div role="tablist" aria-label="Gravações de gameplay" className="flex gap-1">
+                  {REEL.clips.map((c, i) => (
+                    <button
+                      key={c.gif}
+                      type="button"
+                      role="tab"
+                      aria-selected={i === active}
+                      aria-controls="reel-media"
+                      onClick={() => setActive(i)}
+                      className={`cursor-pointer rounded px-2.5 py-1.5 font-tiny text-[0.6rem] transition-colors ${
+                        i === active ? "bg-amber text-ink" : "bg-transparent text-dim hover:bg-white/10 hover:text-text"
+                      }`}
+                    >
+                      {c.label}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
-            <div className="relative aspect-video bg-[#1d1430]">
+            <div id="reel-media" role="tabpanel" className="relative aspect-video bg-[#1d1430]">
               {REEL.video ? (
                 <video
                   className="h-full w-full"
@@ -34,14 +57,21 @@ export function Reel() {
                   preload="none"
                   playsInline
                   poster={REEL.poster}
-                  aria-label={REEL.alt}
+                  aria-label={clip.alt}
                   onPlay={announceMediaPlay}
                 >
                   <source src={REEL.video} />
                 </video>
               ) : (
                 <>
-                  <img className="pixel h-full w-full object-cover" src={playing ? REEL.gif : REEL.poster} alt={REEL.alt} decoding="async" />
+                  {/* key = troca de imagem limpa ao mudar de aba */}
+                  <img
+                    key={clip.gif + playing}
+                    className="pixel h-full w-full object-cover"
+                    src={playing ? clip.gif : clip.poster}
+                    alt={clip.alt}
+                    decoding="async"
+                  />
                   <PokeButton
                     size="sm"
                     className="absolute bottom-3 right-3"
@@ -57,8 +87,8 @@ export function Reel() {
           </div>
         </Reveal>
         <p className="mt-4 text-center font-bold text-dim">
-          Beta do Ato I jogável.{" "}
-          <a href="#projeto/verity" className="text-amber underline decoration-2 underline-offset-4">Ler sobre o projeto →</a>
+          Gravações reais da beta do Ato I.{" "}
+          <a href="#projeto/verity" className="text-amber underline decoration-2 underline-offset-4">Ver galeria e detalhes →</a>
         </p>
       </div>
     </section>

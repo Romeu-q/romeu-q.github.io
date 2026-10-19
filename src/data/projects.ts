@@ -33,7 +33,8 @@ export type Profile = {
   links: { github: string; linkedin: string; itch: string; email: string; cv: string };
 };
 
-export type Reel = { title: string; video: string; poster: string; gif: string; alt: string };
+export type ReelClip = { label: string; gif: string; poster: string; alt: string };
+export type Reel = { title: string; video: string; poster: string; clips: ReelClip[] };
 
 const noLinks: Links = { demo: "", github: "", video: "", itch: "", download: "" };
 
@@ -57,8 +58,21 @@ export const REEL: Reel = {
   title: "Verity — Ato I (beta)",
   video: "", // TODO: "assets/video/verity-reel.mp4" (recomendado: < 8 MB, 720p)
   poster: "assets/img/verity/captura-viagem.webp",
-  gif: "assets/img/verity/verity_grauwick.gif",
-  alt: "Gameplay de Verity: Emil chega à cidade siderúrgica de Grauwick, em visão lateral, com a ambulância estacionada."
+  // Gravações reais do jogo; cada uma vira uma aba no reel
+  clips: [
+    {
+      label: "A viagem",
+      gif: "assets/img/verity/verity_viagem.gif",
+      poster: "assets/img/verity/captura-viagem.webp",
+      alt: "Gameplay de Verity: Emil dirige a ambulância pela estrada ao pôr do sol, entre Grauwick e a Fundição Kessel."
+    },
+    {
+      label: "Fundição Kessel",
+      gif: "assets/img/verity/verity_kessel.gif",
+      poster: "assets/img/verity/gameplay-kessel.webp",
+      alt: "Gameplay de Verity: Emil explora o interior escuro da Fundição Kessel iluminado pela lanterna."
+    }
+  ]
 };
 
 /* ---------- Projetos ---------- */
@@ -116,7 +130,6 @@ export const PROJECTS: Project[] = [
       { src: "assets/img/verity/captura-viagem.webp", alt: "Gameplay: a ambulância na estrada ao pôr do sol, com HUD de combustível e munição.", caption: "Gameplay: a viagem de ambulância entre as fases" },
       { src: "assets/img/verity/abertura-1.webp", alt: "Cutscene: silhueta de um homem segurando uma criança diante de uma cidade em chamas.", caption: "Cutscene de abertura", pixel: true },
       { src: "assets/img/verity/abertura-3.webp", alt: "Cutscene: motorista de boina e cachecol vermelho dirigindo sob chuva.", caption: "Cutscene de abertura", pixel: true },
-      { src: "assets/img/verity/gameplay-grauwick.webp", alt: "Gameplay em Grauwick: prédios de tijolos, NPCs e a ambulância estacionada.", caption: "Gameplay: Grauwick", pixel: true },
       { src: "assets/img/verity/gameplay-kessel.webp", alt: "Gameplay na Fundição Kessel: interior escuro iluminado só por uma lâmpada e pela lanterna.", caption: "Gameplay: Fundição Kessel, só com a lanterna", pixel: true },
       { src: "assets/img/verity/abertura-2.webp", alt: "Cutscene: avião em chamas caindo entre montanhas.", caption: "Cutscene: a queda do avião", pixel: true }
     ],
