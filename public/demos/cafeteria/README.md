@@ -74,10 +74,6 @@ Landing page de uma cafeteria **fictícia** de Feira de Santana - BA: hero com f
 | `app.js` | Estado, filtros, carrinho, gaveta, WhatsApp, status e animações |
 | `img/` | 17 fotos WebP do Unsplash, recortadas no tamanho de uso (cards 720×900, hero 1920×1280), todas abaixo de 200 KB |
 
-## Como rodar
-
-Abra `index.html` no navegador ou sirva a pasta (`npx http-server . -p 8771`). Para usar com um número real, troque `WHATSAPP_NUMBER` no topo de `app.js` (formato `55` + DDD + número).
-
 ## Créditos das fotos
 
 Todas sob a [Unsplash License](https://unsplash.com/license) (gratuitas, nenhuma Unsplash+).
