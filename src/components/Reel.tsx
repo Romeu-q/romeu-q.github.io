@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useReducedMotion } from "framer-motion";
 import { REEL } from "@/data/projects";
 import { announceMediaPlay, icon } from "@/lib/media";
-import { PokeButton } from "./ui/PokeButton";
 import { Reveal } from "./ui/Reveal";
 
 /** Gravações de gameplay do Verity: uma aba por gravação. */
@@ -72,15 +71,18 @@ export function Reel() {
                     alt={clip.alt}
                     decoding="async"
                   />
-                  <PokeButton
-                    size="sm"
-                    className="absolute bottom-3 right-3"
-                    aria-pressed={playing}
-                    icon={icon(playing ? "pause" : "play")}
+                  {/* Pausar é exigência de acessibilidade (WCAG 2.2.2: movimento
+                      com mais de 5 s precisa poder parar), mas fica discreto:
+                      só um ícone pequeno, quase transparente até o hover/foco. */}
+                  <button
+                    type="button"
+                    className="absolute right-2 top-2 grid h-9 w-9 cursor-pointer place-items-center rounded-md border border-white/20 bg-black/40 opacity-60 transition-opacity hover:opacity-100 focus-visible:opacity-100"
+                    aria-label={playing ? "Pausar gravação" : "Reproduzir gravação"}
+                    aria-pressed={!playing}
                     onClick={() => setPlaying((p) => !p)}
                   >
-                    {playing ? "Pausar animação" : "Animar"}
-                  </PokeButton>
+                    <img className="pixel" src={icon(playing ? "pause" : "play")} alt="" width={16} height={16} />
+                  </button>
                 </>
               )}
             </div>
