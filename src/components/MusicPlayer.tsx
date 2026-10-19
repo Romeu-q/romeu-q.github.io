@@ -24,7 +24,6 @@ export default function MusicPlayer() {
 
   const toggleRef = useRef<HTMLDivElement>(null);
   const playRef = useRef<HTMLButtonElement>(null);
-  const startedOnce = useRef(false); // a música só é iniciada no primeiro "abrir"
   const wasOpen = useRef(false); // começa fechado: a montagem não rouba o foco da página
 
   const track = TRACKS[player.trackIndex];
@@ -46,13 +45,8 @@ export default function MusicPlayer() {
     }
   }, [open]);
 
-  const handleOpen = () => {
-    setOpen(true);
-    if (!startedOnce.current && !player.allFailed) {
-      startedOnce.current = true;
-      player.play(); // clique = gesto do usuário, então o navegador permite o áudio
-    }
-  };
+  // A música já começa sozinha ao abrir o site; o botão só mostra o painel.
+  const handleOpen = () => setOpen(true);
 
   // Esc recolhe o painel (a música continua; use o botão de pausa para parar).
   const handleKeyDown = (e: React.KeyboardEvent) => {

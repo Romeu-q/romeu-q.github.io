@@ -2,7 +2,9 @@
  * useMusicPlayer - lógica do player de música de fundo (sem UI).
  *
  * Princípios (o dono do site não quer nada que assuste o visitante):
- *  - Nunca toca sozinho: só depois de um clique explícito.
+ *  - Toca assim que o site abre. Se o navegador bloquear áudio sem interação
+ *    (regra de autoplay do Chrome/Edge/Safari), começa no primeiro clique/tecla.
+ *  - Se o visitante pausar, isso é lembrado e a música não volta sozinha.
  *  - Entrada suave (fade-in) e saída suave (fade-out).
  *  - Se um vídeo do site começar a tocar (evento `portfolio:media-play`), a música pausa.
  *  - Se os arquivos .mp3 não existirem (ainda não baixados), tenta as outras faixas
@@ -24,11 +26,11 @@ const FADE_IN_MS = 2500;
 const FADE_OUT_MS = 600;
 const MEDIA_PLAY_EVENT = 'portfolio:media-play';
 
-type Prefs = { volume: number; track: number; wasPlaying: boolean };
+type Prefs = { volume: number; track: number; wasPlaying: boolean; userOff: boolean };
 
 /** Lê as preferências salvas; qualquer problema (storage bloqueado, JSON ruim) -> padrões. */
 function loadPrefs(): Prefs {
-  const prefs: Prefs = { volume: DEFAULT_VOLUME, track: 0, wasPlaying: false };
+  const prefs: Prefs = { volume: DEFAULT_VOLUME, track: 0, wasPlaying: false, userOff: false };
   try {
     const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? 'null');
     if (saved && typeof saved === 'object') {
@@ -36,6 +38,7 @@ function loadPrefs(): Prefs {
       // A faixa salva NÃO é restaurada: toda visita começa pela primeira da
       // playlist (Terminal Rain), que é a escolhida para abrir o site.
       if (typeof saved.wasPlaying === 'boolean') prefs.wasPlaying = saved.wasPlaying;
+      if (typeof saved.userOff === 'boolean') prefs.userOff = saved.userOff;
     }
   } catch {
     /* storage indisponível: seguimos com os padrões */
@@ -57,7 +60,8 @@ export function useMusicPlayer() {
 
   const [volume, setVolumeState] = useState(initial.volume);
   const [trackIndex, setTrackIndex] = useState(initial.track);
-  const [playing, setPlaying] = useState(false); // sempre começa desligado
+  const [playing, setPlaying] = useState(false); // vira true quando o autoplay consegue tocar
+  const [userOff, setUserOff] = useState(initial.userOff); // visitante desligou de propósito
   const [pausedByVideo, setPausedByVideo] = useState(false);
   const [allFailed, setAllFailed] = useState(false);
 
@@ -69,11 +73,13 @@ export function useMusicPlayer() {
   const failuresRef = useRef(0); // faixas seguidas que falharam
   const fadeRef = useRef(0); // id do requestAnimationFrame do fade em curso
   const loggedRef = useRef(false); // garante um único console.info
+  const userOffRef = useRef(initial.userOff);
+  const armGestureRef = useRef<() => void>(() => {}); // liga no 1º gesto se o autoplay for bloqueado
 
   // Persiste preferências quando algo muda.
   useEffect(() => {
-    savePrefs({ volume, track: trackIndex, wasPlaying: playing });
-  }, [volume, trackIndex, playing]);
+    savePrefs({ volume, track: trackIndex, wasPlaying: playing, userOff });
+  }, [volume, trackIndex, playing, userOff]);
 
   // -------------------------------------------------------------------------
   // Fade
@@ -125,8 +131,10 @@ export function useMusicPlayer() {
           const name = (err as DOMException | undefined)?.name;
           if (name === 'AbortError') return; // trocamos de faixa no meio: normal
           if (name === 'NotAllowedError') {
+            // Navegador bloqueou som sem interação: tenta de novo no primeiro gesto.
             playingRef.current = false;
             setPlaying(false);
+            armGestureRef.current();
             return;
           }
           handleFileError(); // faixa inexistente / formato inválido
@@ -180,8 +188,6 @@ export function useMusicPlayer() {
     }
   }, [allFailed, fadeTo, handleFileError, startTrack]);
 
-  const toggle = useCallback(() => (playingRef.current ? pause() : play()), [pause, play]);
-
   const next = useCallback(() => {
     startTrack((trackRef.current + 1) % TRACKS.length);
   }, [startTrack]);
@@ -200,7 +206,7 @@ export function useMusicPlayer() {
   // -------------------------------------------------------------------------
   useEffect(() => {
     const audio = new Audio();
-    audio.preload = 'none'; // não baixa nada até o visitante pedir
+    audio.preload = 'none'; // só baixa quando a reprodução começa (autoplay ou gesto)
     audioRef.current = audio;
 
     const onEnded = () => startTrack((trackRef.current + 1) % TRACKS.length); // loop da playlist
@@ -235,5 +241,40 @@ export function useMusicPlayer() {
     };
   }, [handleFileError, pause, startTrack]);
 
-  return { volume, trackIndex, playing, pausedByVideo, allFailed, toggle, play, pause, next, setVolume };
+  // -------------------------------------------------------------------------
+  // Autoplay: tenta tocar assim que o site abre
+  // -------------------------------------------------------------------------
+  useEffect(() => {
+    // Se o autoplay for bloqueado, o primeiro clique/toque/tecla em qualquer
+    // lugar conta como gesto do usuário e libera o áudio. { once } remove o
+    // listener sozinho; o capture garante que rode antes de outros handlers.
+    const events = ['pointerdown', 'keydown', 'touchstart'] as const;
+    const onGesture = () => {
+      events.forEach((e) => window.removeEventListener(e, onGesture, true));
+      if (!playingRef.current && !userOffRef.current) startTrack(trackRef.current);
+    };
+    armGestureRef.current = () => events.forEach((e) => window.addEventListener(e, onGesture, { capture: true, once: true }));
+
+    if (!userOffRef.current) startTrack(0); // sempre abre pela primeira faixa
+    return () => events.forEach((e) => window.removeEventListener(e, onGesture, true));
+  }, [startTrack]);
+
+  // Pausar/tocar pelos botões do player = escolha do visitante, que fica salva.
+  // (A pausa causada por vídeo usa pause() direto e não conta como escolha.)
+  const userPause = useCallback(() => {
+    userOffRef.current = true;
+    setUserOff(true);
+    pause();
+  }, [pause]);
+  const userPlay = useCallback(() => {
+    userOffRef.current = false;
+    setUserOff(false);
+    play();
+  }, [play]);
+  const userToggle = useCallback(() => (playingRef.current ? userPause() : userPlay()), [userPause, userPlay]);
+
+  return {
+    volume, trackIndex, playing, pausedByVideo, allFailed,
+    toggle: userToggle, play: userPlay, pause: userPause, next, setVolume,
+  };
 }
