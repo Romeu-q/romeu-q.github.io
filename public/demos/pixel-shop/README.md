@@ -1,6 +1,6 @@
 # Pixel Shop — loja fictícia de packs de pixel art
 
-Demo de portfólio feita por **Romeu**: uma vitrine de assets em pixel art para devs indie, com carrinho, cupom e checkout **de demonstração** (nada é cobrado e nenhum dado sai do navegador). HTML, CSS e JavaScript puros, sem build e sem framework.
+Demo de portfólio feita por **Romeu**: uma vitrine de assets em pixel art para devs indie, com carrinho, cupom e checkout **de demonstração**. HTML, CSS e JavaScript.
 
 ## Decisões de design (base UI/UX Pro Max)
 
@@ -43,12 +43,3 @@ js/hero.js      cena em parallax do topo
 js/app.js       vitrine, FLIP, modal, gaveta e checkout
 ```
 
-## Detalhes técnicos que valem a conversa
-
-- **Preços em centavos** (inteiros) para fugir de `0.1 + 0.2 !== 0.3`.
-- **Mola sem biblioteca**: `Movimento.mola()` simula a física (Hooke + amortecimento) e gera um easing CSS `linear(...)`; o navegador roda a animação no compositor.
-- **FLIP**: mede, muda o DOM uma vez só, inverte com `transform` e anima até zero. O que anima é só transform/opacity.
-- **Pixel nítido**: `image-rendering: pixelated` e sempre escala inteira (16px × 7 nos cards; 4/8/16 px por pixel no zoom).
-- O selo "Novo" é calculado em relação ao pack mais recente do catálogo, então a demo não "envelhece".
-
-Como rodar: abra `index.html` (ou sirva a pasta com qualquer servidor estático). Packs, preços e cupons são fictícios.
