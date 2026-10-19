@@ -64,8 +64,8 @@ export const REEL: Reel = {
 /* ---------- Projetos ---------- */
 export const PROJECTS: Project[] = [
   {
-    id: "delivery-ia",
-    title: "delivery-ia",
+    id: "prefiro-delivery-ia",
+    title: "PrefiroDeliveryIA",
     kind: "Web full stack + IA · teste técnico",
     featured: true,
     summary:
@@ -89,7 +89,7 @@ export const PROJECTS: Project[] = [
       { src: "assets/img/projetos/delivery-ia-3.webp", alt: "Análise em texto da IA: causas da queda e sugestão de ação de reativação de clientes.", caption: "Análise e sugestão de ação" },
       { src: "assets/img/projetos/delivery-ia-2.webp", alt: "Tela inicial com indicadores do mês, seletor de loja e perguntas sugeridas.", caption: "Tela inicial: indicadores do mês e perguntas sugeridas" }
     ],
-    links: { ...noLinks, demo: "https://delivery-ia-production.up.railway.app", github: "https://github.com/Romeu-q/delivery-ia" }
+    links: { ...noLinks, demo: "https://delivery-ia-production.up.railway.app", github: "https://github.com/Romeu-q/PrefiroDeliveryIA" }
   },
   {
     id: "verity",

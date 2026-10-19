@@ -9,14 +9,14 @@ import { Reveal } from "./ui/Reveal";
  */
 export function QuickStart() {
   const reduce = useReducedMotion();
-  const delivery = PROJECTS.find((p) => p.id === "delivery-ia")!;
+  const delivery = PROJECTS.find((p) => p.id === "prefiro-delivery-ia")!;
   const verity = PROJECTS.find((p) => p.id === "verity")!;
 
   const tiles = [
     {
       step: "1",
       title: "Teste um projeto no ar",
-      text: "delivery-ia: pergunte sobre vendas e a IA responde com dados reais e gráficos.",
+      text: "PrefiroDeliveryIA: pergunte sobre vendas e a IA responde com dados reais e gráficos.",
       href: delivery.links.demo,
       cta: "Abrir demo ao vivo",
       img: delivery.shots[0].src,

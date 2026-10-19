@@ -8,10 +8,9 @@
  *  3. Use SOMENTE músicas próprias, CC0 / domínio público, ou CC BY (neste caso o
  *     crédito ao autor é obrigatório: preencha `artist`, `license` e `sourceUrl`).
  *
- * As faixas abaixo são CC0 (HoliznaCC0, Free Music Archive). O FMA exige login
- * para baixar, então os arquivos NÃO vêm no repositório: veja
- * `public/assets/music/LEIA-ME.md`. Enquanto não existirem, o player avisa com
- * uma mensagem calma, sem quebrar nada.
+ * As faixas abaixo vêm do Open Lo-Fi (github.com/btahir/open-lofi), coleção
+ * em domínio público (CC0 1.0): podem ser hospedadas e usadas livremente, sem
+ * crédito obrigatório (damos o crédito mesmo assim).
  */
 
 export type Track = {
@@ -30,36 +29,49 @@ const CC0 = {
   licenseUrl: 'https://creativecommons.org/publicdomain/zero/1.0/',
 } as const;
 
+const SOURCE = 'https://github.com/btahir/open-lofi';
+
 export const TRACKS: Track[] = [
   {
-    title: 'Calm Currents',
-    artist: 'HoliznaCC0',
-    src: 'assets/music/calm-currents.mp3',
+    title: '2 AM Debug Loop',
+    artist: 'Open Lo-Fi',
+    src: 'assets/music/2-am-debug-loop.mp3',
     ...CC0,
-    sourceUrl:
-      'https://freemusicarchive.org/music/holiznacc0/public-domain-lofi/calm-currents-lofi-relax-calm/',
+    sourceUrl: SOURCE,
   },
   {
-    title: 'Peaceful Drift',
-    artist: 'HoliznaCC0',
-    src: 'assets/music/peaceful-drift.mp3',
+    title: 'Window Seat Daydream',
+    artist: 'Open Lo-Fi',
+    src: 'assets/music/window-seat-daydream.mp3',
     ...CC0,
-    sourceUrl:
-      'https://freemusicarchive.org/music/holiznacc0/public-domain-lofi/peaceful-drift-lofi-nostalgic-calm/',
+    sourceUrl: SOURCE,
   },
   {
-    title: 'Tokyo Sunset',
-    artist: 'HoliznaCC0',
-    src: 'assets/music/tokyo-sunset.mp3',
+    title: 'First Coffee Thoughts',
+    artist: 'Open Lo-Fi',
+    src: 'assets/music/first-coffee-thoughts.mp3',
     ...CC0,
-    sourceUrl:
-      'https://freemusicarchive.org/music/holiznacc0/public-domain-lofi/tokyo-sunset-lofi-peaceful-soft/',
+    sourceUrl: SOURCE,
   },
   {
-    title: 'Morning Coffee',
-    artist: 'HoliznaCC0',
-    src: 'assets/music/morning-coffee.mp3',
+    title: 'Pixel Quest Save Point',
+    artist: 'Open Lo-Fi',
+    src: 'assets/music/pixel-quest-save-point.mp3',
     ...CC0,
-    sourceUrl: 'https://freemusicarchive.org/music/holiznacc0/lo-fi-and-chill/morning-coffee/',
+    sourceUrl: SOURCE,
+  },
+  {
+    title: 'Terminal Rain',
+    artist: 'Open Lo-Fi',
+    src: 'assets/music/terminal-rain.mp3',
+    ...CC0,
+    sourceUrl: SOURCE,
+  },
+  {
+    title: 'Cursor After Midnight',
+    artist: 'Open Lo-Fi',
+    src: 'assets/music/cursor-after-midnight.mp3',
+    ...CC0,
+    sourceUrl: SOURCE,
   },
 ];
