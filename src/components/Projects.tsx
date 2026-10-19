@@ -153,7 +153,7 @@ export function Projects() {
       <Reveal>
         <h3 id="demos-title" className="mb-2 mt-16 font-pixel text-2xl font-bold">Sites de demonstração</h3>
         <p className="mb-6 max-w-[46rem] text-dim">
-          Três mini-sites com visuais bem diferentes, feitos em HTML, CSS e JavaScript puros. Todos funcionam aqui mesmo, no navegador.
+          Três produtos fictícios com identidades visuais diferentes, feitos em HTML, CSS e JavaScript puros (sem framework). Todos funcionam aqui mesmo, no navegador.
         </p>
       </Reveal>
       <div className="grid gap-6 [grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr))]" aria-labelledby="demos-title">

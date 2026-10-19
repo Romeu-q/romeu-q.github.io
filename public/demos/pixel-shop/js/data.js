@@ -1,0 +1,233 @@
+/* ==========================================================================
+   data.js — catálogo da loja (tudo fictício).
+
+   Por que separar dados da interface?
+   A UI só "lê" este arquivo e desenha. Para lançar um pack novo basta incluir
+   um objeto aqui — nenhuma outra linha de código precisa mudar.
+
+   Decisões:
+   - preco em CENTAVOS (inteiro): evita erro de ponto flutuante
+     (0.1 + 0.2 !== 0.3) ao somar o carrinho e aplicar cupom.
+   - sprite: chave em SPRITES (sprites.js). paleta: cor de cada dígito da grade.
+   - tom: cor de fundo da capa do card, combinando com o pack.
+   - destaque: ordem da vitrine em "Destaques" (menor = aparece antes).
+   ========================================================================== */
+
+const CATEGORIAS = {
+  tilesets: 'Tilesets',
+  personagens: 'Personagens',
+  interface: 'Interface',
+  efeitos: 'Efeitos',
+  fontes: 'Fontes',
+  itens: 'Itens',
+};
+
+const LICENCA_PADRAO = 'Uso comercial liberado em jogos próprios, sem limite de cópias vendidas. Crédito opcional. Proibido revender ou redistribuir os arquivos do pack.';
+
+const PRODUTOS = [
+  {
+    id: 'cavaleiro-pixel',
+    nome: 'Cavaleiro Pixel',
+    categoria: 'personagens',
+    preco: 2490,
+    data: '2026-09-10',
+    destaque: 1,
+    sprite: 'cavaleiro',
+    tom: '#3a5fcd',
+    paleta: ['#14142b', '#5d6b8a', '#b8c4d8', '#ffffff', '#3a5fcd', '#26408f', '#6b3f1d', '#f43f5e', '#ffd23f', '#e2e8f0'],
+    resumo: 'Herói de armadura com 6 animações em 4 direções.',
+    descricao: 'Um herói clássico pronto para o seu action RPG: andar, correr, atacar, defender, levar dano e cair — cada animação em quatro direções, com tags no Aseprite.',
+    specs: ['32×32', '6 animações', '.aseprite'],
+    inclui: ['Spritesheet 32×32 (4 direções)', '6 animações com tags', '3 variações de paleta', 'Arquivo .aseprite editável'],
+    licenca: LICENCA_PADRAO,
+  },
+  {
+    id: 'floresta-encantada',
+    nome: 'Floresta Encantada',
+    categoria: 'tilesets',
+    preco: 2990,
+    precoOriginal: 3990,
+    data: '2026-08-02',
+    destaque: 2,
+    sprite: 'arvore',
+    tom: '#1f6b35',
+    paleta: ['#0b2614', '#1f6b35', '#2fa04a', '#7bd04a', '#7a4a21', '#4a2c14', '#f43f5e'],
+    resumo: 'Tileset top-down com árvores, trilhas e rios.',
+    descricao: 'Tileset top-down de floresta com árvores que balançam, arbustos, trilhas, pontes e rios com autotile — pronto para montar mapas no Tiled ou no Godot.',
+    specs: ['16×16', '256 tiles', 'Tiled'],
+    inclui: ['Tileset 16×16 (256 tiles)', 'Árvores em 3 estações', 'Mapa de exemplo (.tmx)', 'Arquivo .aseprite editável'],
+    licenca: LICENCA_PADRAO,
+  },
+  {
+    id: 'bestiario-slimes',
+    nome: 'Bestiário de Slimes',
+    categoria: 'personagens',
+    preco: 1990,
+    data: '2026-06-21',
+    destaque: 3,
+    sprite: 'slime',
+    tom: '#23894a',
+    paleta: ['#10301c', '#3ec46d', '#a6f5b8', '#ffffff', '#23894a'],
+    resumo: '12 slimes com idle, pulo e morte.',
+    descricao: 'Doze slimes inimigos com squash & stretch caprichado. Troque a paleta por elemento (fogo, gelo, veneno) e tenha um bestiário inteiro em minutos.',
+    specs: ['16×16', '12 inimigos', 'PNG + JSON'],
+    inclui: ['12 slimes 16×16', 'Idle, pulo, dano e morte', 'Troca de paleta por elemento', 'Atlas PNG + JSON'],
+    licenca: LICENCA_PADRAO,
+  },
+  {
+    id: 'explosoes-8bit',
+    nome: 'Explosões 8-bit',
+    categoria: 'efeitos',
+    preco: 1790,
+    data: '2026-09-28',
+    destaque: 4,
+    sprite: 'explosao',
+    tom: '#9a2c0a',
+    paleta: ['#7a1c0c', '#d9480f', '#ff9f1c', '#ffe066', '#ffffff', '#4a3a5a'],
+    resumo: 'Explosões, faíscas e fumaça com impacto.',
+    descricao: 'Explosões, faíscas e fumaça em quadros curtos, pensadas para dar peso a cada golpe. Inclui versão em tons de cinza para colorir no próprio motor.',
+    specs: ['32×32', '15 efeitos', '8–12 quadros'],
+    inclui: ['15 efeitos animados', '8 a 12 quadros cada', 'Versão em tons de cinza', 'Spritesheets PNG'],
+    licenca: LICENCA_PADRAO,
+  },
+  {
+    id: 'ui-kit-arcade',
+    nome: 'UI Kit Arcade',
+    categoria: 'interface',
+    preco: 3290,
+    data: '2026-07-05',
+    destaque: 5,
+    sprite: 'painel',
+    tom: '#4b3a9a',
+    paleta: ['#0d0a1f', '#8f7bff', '#3b2f7a', '#231a4d', '#e2e8f0', '#ff4d6d', '#ffd23f'],
+    resumo: 'Painéis nine-slice, botões e diálogos.',
+    descricao: 'Painéis nine-slice, botões em três estados, barras de vida e caixas de diálogo com cursor animado, no estilo dos arcades dos anos 90.',
+    specs: ['Nine-slice', '40 peças', 'PDF guia'],
+    inclui: ['40 elementos de interface', 'Painéis nine-slice', 'Cursores e ícones de menu', 'Guia de uso em PDF'],
+    licenca: LICENCA_PADRAO,
+  },
+  {
+    id: 'vila-medieval',
+    nome: 'Vila Medieval',
+    categoria: 'tilesets',
+    preco: 3990,
+    data: '2026-10-05',
+    destaque: 6,
+    sprite: 'casa',
+    tom: '#8f2440',
+    paleta: ['#1a0f33', '#d1495b', '#8f2440', '#f2d8a7', '#ffd166', '#6b3f1d', '#9aa3c7', '#c9a878', '#fff3b0'],
+    resumo: 'Casas modulares, mercados e muralhas.',
+    descricao: 'Casas modulares, mercados, poços e muralhas para montar vilarejos em perspectiva 3/4. As janelas acendem à noite e as chaminés soltam fumaça.',
+    specs: ['16×16', '400 tiles', '12 prédios'],
+    inclui: ['Tileset 16×16 (400 tiles)', '12 prédios modulares', 'Decorações e NPCs estáticos', 'Mapa de exemplo (.tmx)'],
+    licenca: LICENCA_PADRAO,
+  },
+  {
+    id: 'masmorra-profunda',
+    nome: 'Masmorra Profunda',
+    categoria: 'tilesets',
+    preco: 3490,
+    precoOriginal: 4490,
+    data: '2026-05-14',
+    destaque: 7,
+    sprite: 'tocha',
+    tom: '#2b2257',
+    paleta: ['#120c24', '#3b2f6b', '#5a4a9a', '#6b6b80', '#e8501c', '#ff9f1c', '#ffe066', '#fff6d5', '#6b3f1d'],
+    resumo: 'Paredes, tochas e armadilhas para dungeons.',
+    descricao: 'Paredes com autotile, chãos, portas, alavancas e tochas animadas para dungeon crawlers. Paleta fria com pontos de luz quente.',
+    specs: ['16×16', '320 tiles', 'Autotile'],
+    inclui: ['Tileset 16×16 (320 tiles)', 'Tochas e portas animadas', 'Autotile de paredes', 'Paleta em .gpl'],
+    licenca: LICENCA_PADRAO,
+  },
+  {
+    id: 'nave-cometa',
+    nome: 'Nave Cometa',
+    categoria: 'personagens',
+    preco: 1690,
+    data: '2026-10-12',
+    destaque: 8,
+    sprite: 'nave',
+    tom: '#1b3a6b',
+    paleta: ['#14142b', '#e2e8f0', '#9aa6c0', '#4cc9f0', '#f43f5e', '#ff9f1c', '#ffe066', '#8f2440'],
+    resumo: 'Nave de shmup com propulsor e inclinação.',
+    descricao: 'Nave para shoot ’em ups com propulsor animado, quadros de inclinação para os lados e três upgrades visuais de arma.',
+    specs: ['16×16', '3 upgrades', 'Propulsor'],
+    inclui: ['Nave 16×16 e 32×32', 'Inclinação esquerda/direita', 'Propulsor em 3 quadros', '3 upgrades de arma'],
+    licenca: LICENCA_PADRAO,
+  },
+  {
+    id: 'pocoes-frascos',
+    nome: 'Poções & Frascos',
+    categoria: 'itens',
+    preco: 1490,
+    data: '2026-03-30',
+    destaque: 9,
+    sprite: 'pocao',
+    tom: '#8a1f55',
+    paleta: ['#1a0f33', '#bfe9ff', '#ff4d9d', '#ffd1e8', '#8a5a2b', '#c41f6b', '#ffffff'],
+    resumo: '40 poções borbulhantes para inventários.',
+    descricao: 'Quarenta poções, frascos e elixires borbulhantes para inventários de RPG, com variações de cor por efeito e versão ampliada para a loja do jogo.',
+    specs: ['16×16', '40 ícones', 'Animado'],
+    inclui: ['40 ícones 16×16', 'Versões 32×32 ampliadas', 'Bolhas animadas', 'Arquivo .aseprite'],
+    licenca: LICENCA_PADRAO,
+  },
+  {
+    id: 'gemas-moedas',
+    nome: 'Gemas e Moedas',
+    categoria: 'itens',
+    preco: 1290,
+    data: '2026-08-19',
+    destaque: 10,
+    sprite: 'gema',
+    tom: '#1a5fb0',
+    paleta: ['#0d2a4a', '#2fa4ff', '#7fd8ff', '#ffffff', '#1a5fb0', '#fff6b0'],
+    resumo: 'Colecionáveis com brilho e giro animados.',
+    descricao: 'Moedas giratórias, gemas com brilho (sparkle) e baús de tesouro para colecionáveis de plataforma. Cada item flutua num loop curto e suave.',
+    specs: ['16×16', '24 itens', 'Sparkle'],
+    inclui: ['24 colecionáveis', 'Moeda com giro de 8 quadros', 'Brilho animado', 'Lista de sons sugeridos'],
+    licenca: LICENCA_PADRAO,
+  },
+  {
+    id: 'arsenal-lendario',
+    nome: 'Arsenal Lendário',
+    categoria: 'itens',
+    preco: 1890,
+    data: '2026-07-22',
+    destaque: 11,
+    sprite: 'espada',
+    tom: '#4a4f6b',
+    paleta: ['#14142b', '#e2e8f0', '#8f9bb8', '#ffd23f', '#b8860b', '#6b3f1d', '#f43f5e', '#ffffff'],
+    resumo: '30 armas com reflexo metálico animado.',
+    descricao: 'Espadas, machados, arcos e cajados com reflexo metálico animado — ícones de inventário e versões para segurar na mão do personagem.',
+    specs: ['16×16', '30 armas', 'Brilho'],
+    inclui: ['30 armas 16×16', 'Versão "na mão" 32×32', 'Reflexo animado', 'Arquivo .aseprite'],
+    licenca: LICENCA_PADRAO,
+  },
+  {
+    id: 'fonte-bitquest',
+    nome: 'Fonte Bitquest',
+    categoria: 'fontes',
+    preco: 990,
+    data: '2026-04-18',
+    destaque: 12,
+    sprite: 'letra',
+    tom: '#7a5a00',
+    paleta: ['#3d2a00', '#ffd23f', '#fff3b0', '#b8860b'],
+    resumo: 'Fonte bitmap com acentos do português.',
+    descricao: 'Fonte bitmap com todos os acentos do português, símbolos de controle (A, B, setas) e versões em 8px e 16px para HUDs e diálogos.',
+    specs: ['8 e 16px', 'PT-BR', '.ttf + .fnt'],
+    inclui: ['Fonte .ttf e .fnt (BMFont)', 'Acentos PT-BR completos', 'Ícones de botão de controle', 'Folha de caracteres PNG'],
+    licenca: 'Uso comercial liberado, inclusive em logotipos de jogos. Proibido revender a fonte isoladamente.',
+  },
+];
+
+/* Busca um produto pelo id (o carrinho guarda só ids). */
+function buscarProduto(id) {
+  return PRODUTOS.find((p) => p.id === id) || null;
+}
+
+/* Formata centavos como Real: 2490 -> "R$ 24,90". */
+const formatoBRL = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
+function formatarPreco(centavos) {
+  return formatoBRL.format(centavos / 100);
+}

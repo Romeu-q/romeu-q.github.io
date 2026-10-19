@@ -3,185 +3,377 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Painel de Vendas — Demo</title>
-  <meta name="description" content="Demo de painel administrativo de vendas com dados fictícios, gráficos, tabela com busca e ordenação.">
+  <title>Sabiá Analytics — Painel de vendas (demo)</title>
+  <meta name="description" content="Demo de painel de análise de vendas de um e-commerce de alimentos: KPIs, gráficos, mapa de calor, tabela de pedidos e paleta de comandos. HTML, CSS e JS puros.">
+  <meta name="color-scheme" content="dark light">
 
-  <!-- Tema aplicado ANTES do CSS carregar, para não piscar branco quando o usuário
-       prefere escuro. Ordem: escolha salva > preferência do sistema operacional. -->
+  <!-- Tema aplicado ANTES do CSS para não "piscar" claro em quem usa escuro.
+       Ordem: escolha salva > preferência do sistema. O padrão do produto é escuro. -->
   <script>
     (function () {
-      var tema = null;
-      try { tema = localStorage.getItem('dashboard-tema'); } catch (e) { /* storage bloqueado: segue sem salvar */ }
+      var tema = null, menu = null;
+      try {
+        tema = localStorage.getItem('sabia-tema');
+        menu = localStorage.getItem('sabia-menu');
+      } catch (e) { /* storage bloqueado (aba anônima): segue sem salvar */ }
       if (tema !== 'dark' && tema !== 'light') {
-        tema = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        tema = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
       }
       document.documentElement.setAttribute('data-theme', tema);
+      if (menu === 'recolhido') document.documentElement.setAttribute('data-menu', 'recolhido');
     })();
   </script>
 
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect width=%2232%22 height=%2232%22 rx=%229%22 fill=%22%236d5ef5%22/%3E%3Cpath d=%22M9 20.5c3.5 0 5-6.5 8.5-6.5 2.2 0 2.8 2.2 5.5 2.2%22 fill=%22none%22 stroke=%22white%22 stroke-width=%222.4%22 stroke-linecap=%22round%22/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <a class="pular-link" href="#conteudo">Ir para o conteúdo</a>
 
+  <!-- Sprite de ícones (traço no estilo Lucide). <use href="#i-..."> reaproveita
+       o mesmo desenho em vários lugares sem repetir o SVG inteiro. -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></symbol>
+      <symbol id="i-trend" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></symbol>
+      <symbol id="i-pie" viewBox="0 0 24 24"><path d="M21.2 15.9A10 10 0 1 1 8 2.8"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></symbol>
+      <symbol id="i-package" viewBox="0 0 24 24"><path d="m7.5 4.3 9 5.1"/><path d="M21 8a2 2 0 0 0-1-1.7l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.7l7 4a2 2 0 0 0 2 0l7-4a2 2 0 0 0 1-1.7Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></symbol>
+      <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+      <symbol id="i-activity" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></symbol>
+      <symbol id="i-bag" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></symbol>
+      <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+      <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+      <symbol id="i-panel" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2.5"/><path d="M9 3v18"/><path d="m16 15-3-3 3-3"/></symbol>
+      <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+      <symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></symbol>
+      <symbol id="i-up" viewBox="0 0 24 24"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></symbol>
+      <symbol id="i-down" viewBox="0 0 24 24"><path d="M7 7l10 10"/><path d="M17 8v9H8"/></symbol>
+      <symbol id="i-flat" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+      <symbol id="i-left" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></symbol>
+      <symbol id="i-right" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+      <symbol id="i-back" viewBox="0 0 24 24"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></symbol>
+      <symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.9"/><path d="M16 3.1a4 4 0 0 1 0 7.8"/></symbol>
+      <symbol id="i-coins" viewBox="0 0 24 24"><circle cx="8" cy="8" r="6"/><path d="M18.1 10.4A6 6 0 1 1 10.3 18"/><path d="M7 6h1v4"/><path d="m16.7 13.9.7.7-2.8 2.8"/></symbol>
+      <symbol id="i-receipt" viewBox="0 0 24 24"><path d="M4 2v20l3-2 3 2 2-2 2 2 3-2 3 2V2l-3 2-3-2-2 2-2-2-3 2Z"/><path d="M16 8H8M16 12H8M13 16H8"/></symbol>
+      <symbol id="i-truck" viewBox="0 0 24 24"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.7a1 1 0 0 0-.2-.6l-3.5-4.3A1 1 0 0 0 17.5 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></symbol>
+      <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+      <symbol id="i-ban" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m5.7 5.7 12.6 12.6"/></symbol>
+      <symbol id="i-user-plus" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></symbol>
+      <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"/></symbol>
+      <symbol id="i-moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></symbol>
+      <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></symbol>
+      <symbol id="i-table" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18"/></symbol>
+      <symbol id="i-corner" viewBox="0 0 24 24"><path d="M9 10 4 15l5 5"/><path d="M20 4v7a4 4 0 0 1-4 4H4"/></symbol>
+    </defs>
+  </svg>
+
   <div class="app" id="app">
 
-    <!-- ===== Menu lateral ===== -->
-    <nav class="sidebar" id="sidebar" aria-label="Navegação principal">
-      <div class="marca">
-        <svg class="marca__icone" viewBox="0 0 24 24" width="28" height="28" aria-hidden="true" focusable="false">
-          <rect x="2" y="2" width="20" height="20" rx="6" fill="currentColor"/>
-          <path d="M7 16l3-4 3 2 4-6" fill="none" stroke="var(--accent-contrast)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <span class="marca__texto">Loja Aurora</span>
+    <!-- ===================== Menu lateral ===================== -->
+    <aside class="sidebar" id="sidebar" aria-label="Menu lateral">
+      <div class="sidebar__topo">
+        <a class="marca" href="#visao" aria-label="Sabiá Analytics, ir para o início">
+          <span class="marca__logo" aria-hidden="true">
+            <svg viewBox="0 0 32 32" width="32" height="32"><rect width="32" height="32" rx="9" fill="url(#g-logo)"/><path d="M9 20.5c3.5 0 5-6.5 8.5-6.5 2.2 0 2.8 2.2 5.5 2.2" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/><circle cx="22.6" cy="11" r="1.8" fill="#fff"/><defs><linearGradient id="g-logo" x1="0" y1="0" x2="32" y2="32"><stop stop-color="#8B7CFF"/><stop offset="1" stop-color="#5B4FE8"/></linearGradient></defs></svg>
+          </span>
+          <span class="marca__texto">
+            <strong>Sabiá</strong>
+            <small>Alimentos artesanais</small>
+          </span>
+        </a>
+        <button type="button" class="botao-icone sidebar__recolher" id="botao-recolher" aria-label="Recolher menu" aria-expanded="true" aria-controls="sidebar">
+          <svg class="icone" aria-hidden="true"><use href="#i-panel"/></svg>
+        </button>
+        <button type="button" class="botao-icone sidebar__fechar" id="botao-fechar-menu" aria-label="Fechar menu">
+          <svg class="icone" aria-hidden="true"><use href="#i-x"/></svg>
+        </button>
       </div>
-      <ul class="nav">
-        <li>
-          <a class="nav__link" href="#resumo" aria-current="page">
-            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false"><path d="M3 12l9-8 9 8M5 10v10h5v-6h4v6h5V10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            <span class="nav__texto">Resumo</span>
-          </a>
-        </li>
-        <li>
-          <a class="nav__link" href="#graficos">
-            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            <span class="nav__texto">Gráficos</span>
-          </a>
-        </li>
-        <li>
-          <a class="nav__link" href="#pedidos">
-            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            <span class="nav__texto">Pedidos</span>
-          </a>
-        </li>
-      </ul>
-    </nav>
-    <!-- Fundo escuro atrás do menu no celular; clicar nele fecha o menu -->
-    <div class="overlay" id="overlay" aria-hidden="true"></div>
 
-    <div class="coluna">
-      <!-- ===== Barra superior ===== -->
+      <nav class="sidebar__nav" aria-label="Seções do painel">
+        <p class="sidebar__grupo">Análise</p>
+        <ul class="nav" id="nav">
+          <!-- O indicador é UM elemento que desliza até o item ativo (transform),
+               em vez de cada link ter seu próprio fundo que liga/desliga. -->
+          <li class="nav__indicador" id="nav-indicador" aria-hidden="true"></li>
+          <li><a class="nav__link" href="#visao" aria-current="true"><svg class="icone" aria-hidden="true"><use href="#i-grid"/></svg><span>Visão geral</span></a></li>
+          <li><a class="nav__link" href="#receita"><svg class="icone" aria-hidden="true"><use href="#i-trend"/></svg><span>Receita</span></a></li>
+          <li><a class="nav__link" href="#categorias"><svg class="icone" aria-hidden="true"><use href="#i-pie"/></svg><span>Categorias</span></a></li>
+          <li><a class="nav__link" href="#produtos"><svg class="icone" aria-hidden="true"><use href="#i-package"/></svg><span>Produtos</span></a></li>
+          <li><a class="nav__link" href="#horarios"><svg class="icone" aria-hidden="true"><use href="#i-clock"/></svg><span>Horários</span></a></li>
+          <li><a class="nav__link" href="#atividade"><svg class="icone" aria-hidden="true"><use href="#i-activity"/></svg><span>Atividade</span></a></li>
+          <li><a class="nav__link" href="#pedidos"><svg class="icone" aria-hidden="true"><use href="#i-bag"/></svg><span>Pedidos</span><span class="nav__contador" id="nav-contador"></span></a></li>
+        </ul>
+      </nav>
+
+      <div class="sidebar__rodape">
+        <div class="cartao-autor">
+          <p class="cartao-autor__titulo">Demo feita por Romeu</p>
+          <p class="cartao-autor__texto">HTML, CSS e JS puros · dados fictícios</p>
+        </div>
+        <a class="nav__link nav__link--voltar" href="../../index.html">
+          <svg class="icone" aria-hidden="true"><use href="#i-back"/></svg><span>voltar ao portfólio</span>
+        </a>
+      </div>
+    </aside>
+    <!-- Fundo atrás do menu no celular; clicar nele fecha o menu -->
+    <div class="veu" id="veu" aria-hidden="true"></div>
+
+    <div class="coluna" id="coluna">
+      <!-- ===================== Barra superior ===================== -->
       <header class="topbar">
-        <button type="button" class="botao-icone" id="botao-menu" aria-controls="sidebar" aria-expanded="true" aria-label="Menu lateral">
-          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false"><path d="M4 6h16M4 12h16M4 18h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <button type="button" class="botao-icone topbar__menu" id="botao-menu" aria-label="Abrir menu" aria-expanded="false" aria-controls="sidebar">
+          <svg class="icone" aria-hidden="true"><use href="#i-menu"/></svg>
         </button>
 
-        <h1 class="topbar__titulo">Painel de Vendas</h1>
+        <p class="trilha"><span class="trilha__loja">Sabiá</span><span class="trilha__sep" aria-hidden="true">/</span><span class="trilha__atual" id="trilha-atual">Visão geral</span></p>
 
-        <div class="topbar__acoes">
-          <div class="periodo" role="group" aria-label="Período de análise">
-            <button type="button" class="periodo__btn" data-periodo="7" aria-pressed="false">7 dias</button>
-            <button type="button" class="periodo__btn" data-periodo="30" aria-pressed="true">30 dias</button>
-            <button type="button" class="periodo__btn" data-periodo="12m" aria-pressed="false">12 meses</button>
-          </div>
+        <button type="button" class="busca-gatilho" id="abrir-paleta" aria-haspopup="dialog" aria-keyshortcuts="Control+K Meta+K">
+          <svg class="icone" aria-hidden="true"><use href="#i-search"/></svg>
+          <span class="busca-gatilho__texto">Buscar ou executar comando…</span>
+          <kbd class="atalho" id="atalho-paleta">Ctrl K</kbd>
+          <span class="so-leitor">(atalho Ctrl ou Cmd + K)</span>
+        </button>
 
-          <a class="topbar__voltar" href="../../index.html">← voltar ao portfólio</a>
-
-          <!-- aria-pressed + rótulo fixo: leitor de tela anuncia "Tema escuro, ligado/desligado" -->
-          <button type="button" class="botao-icone" id="botao-tema" aria-pressed="false" aria-label="Tema escuro">
-            <svg class="icone-lua" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
-            <svg class="icone-sol" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-          </button>
+        <!-- Controle segmentado: grupo de botões com aria-pressed. A "pílula"
+             atrás do botão ativo é um elemento só, que desliza. -->
+        <div class="segmentado" id="periodo" role="group" aria-label="Período de análise">
+          <span class="segmentado__pilula" aria-hidden="true"></span>
+          <button type="button" data-periodo="7" aria-pressed="false"><span>7d</span><span class="so-leitor"> (últimos 7 dias)</span></button>
+          <button type="button" data-periodo="30" aria-pressed="true"><span>30d</span><span class="so-leitor"> (últimos 30 dias)</span></button>
+          <button type="button" data-periodo="12m" aria-pressed="false"><span>12m</span><span class="so-leitor"> (últimos 12 meses)</span></button>
         </div>
+
+        <!-- aria-pressed + rótulo fixo: o leitor anuncia "Tema escuro, pressionado". -->
+        <button type="button" class="botao-icone botao-tema" id="botao-tema" aria-pressed="true" aria-label="Tema escuro">
+          <svg class="tema-icone" viewBox="0 0 24 24" aria-hidden="true">
+            <mask id="m-lua"><rect width="24" height="24" fill="#fff"/><circle class="tema-icone__mordida" cx="17" cy="7" r="5.2" fill="#000"/></mask>
+            <circle class="tema-icone__nucleo" cx="12" cy="12" r="5" mask="url(#m-lua)"/>
+            <g class="tema-icone__raios"><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"/></g>
+          </svg>
+        </button>
+
+        <span class="avatar" role="img" aria-label="Conta de Marina Costa, gerente da loja">MC</span>
       </header>
 
       <main class="principal" id="conteudo" tabindex="-1">
-
-        <!-- ===== KPIs ===== -->
-        <section id="resumo" aria-labelledby="titulo-resumo">
-          <div class="secao-cab">
-            <h2 id="titulo-resumo">Resumo</h2>
-            <p class="secao-nota" id="nota-periodo"></p>
+        <!-- ===================== Cabeçalho da página ===================== -->
+        <div class="cabecalho" id="visao">
+          <div>
+            <h1>Visão geral</h1>
+            <p class="cabecalho__sub">
+              <svg class="icone icone--p" aria-hidden="true"><use href="#i-calendar"/></svg>
+              <span id="intervalo-texto">Últimos 30 dias</span>
+              <span class="ponto-vivo" aria-hidden="true"></span><span>Atualizado às 20:45</span>
+            </p>
           </div>
-          <div class="kpis">
-            <article class="card kpi" data-kpi="faturamento">
-              <h3 class="kpi__rotulo">Faturamento</h3>
-              <p class="kpi__valor"></p>
-              <p class="kpi__variacao"></p>
-            </article>
-            <article class="card kpi" data-kpi="pedidos">
-              <h3 class="kpi__rotulo">Pedidos</h3>
-              <p class="kpi__valor"></p>
-              <p class="kpi__variacao"></p>
-            </article>
-            <article class="card kpi" data-kpi="ticket">
-              <h3 class="kpi__rotulo">Ticket médio</h3>
-              <p class="kpi__valor"></p>
-              <p class="kpi__variacao"></p>
-            </article>
-            <article class="card kpi" data-kpi="novos">
-              <h3 class="kpi__rotulo">Novos clientes</h3>
-              <p class="kpi__valor"></p>
-              <p class="kpi__variacao"></p>
-            </article>
-          </div>
-        </section>
+          <button type="button" class="botao botao--primario" data-acao="exportar">
+            <svg class="icone" aria-hidden="true"><use href="#i-download"/></svg> Exportar CSV
+          </button>
+        </div>
 
-        <!-- ===== Gráficos ===== -->
-        <section id="graficos" aria-labelledby="titulo-graficos">
-          <h2 id="titulo-graficos">Gráficos</h2>
-          <div class="graficos">
-            <figure class="card grafico grafico--largo">
-              <figcaption>Faturamento ao longo do tempo</figcaption>
-              <div class="grafico__area"><canvas id="grafico-receita" role="img" aria-label="Gráfico de linha do faturamento"></canvas></div>
-            </figure>
-            <figure class="card grafico">
-              <figcaption>Faturamento por categoria</figcaption>
-              <div class="grafico__area"><canvas id="grafico-categorias" role="img" aria-label="Gráfico de barras do faturamento por categoria"></canvas></div>
-            </figure>
-            <figure class="card grafico">
-              <figcaption>Pedidos por dia da semana</figcaption>
-              <div class="grafico__area"><canvas id="grafico-semana" role="img" aria-label="Gráfico de barras dos pedidos por dia da semana"></canvas></div>
-            </figure>
-          </div>
-        </section>
+        <!-- Status para leitor de tela: anuncia a troca de período uma vez,
+             em vez de ler cada número que mudou. -->
+        <p class="so-leitor" id="anuncio" role="status" aria-live="polite"></p>
 
-        <!-- ===== Tabela de pedidos ===== -->
-        <section id="pedidos" aria-labelledby="titulo-pedidos">
-          <div class="secao-cab">
-            <h2 id="titulo-pedidos">Pedidos</h2>
-            <div class="busca">
-              <label for="busca-pedidos">Buscar pedido</label>
-              <input type="search" id="busca-pedidos" placeholder="Nº, cliente, categoria ou status" autocomplete="off">
-            </div>
-          </div>
+        <div class="bento" id="bento">
+          <!-- ===================== KPIs ===================== -->
+          <section class="kpis" aria-label="Indicadores principais">
+            <article class="card kpi" data-kpi="faturamento" style="--i:0">
+              <div class="kpi__topo"><span class="kpi__icone"><svg class="icone" aria-hidden="true"><use href="#i-coins"/></svg></span><h2>Receita</h2><span class="selo" data-selo></span></div>
+              <p class="kpi__valor" data-valor>—</p>
+              <p class="kpi__nota" data-nota></p>
+              <svg class="faisca" data-faisca viewBox="0 0 120 36" preserveAspectRatio="none" aria-hidden="true"></svg>
+            </article>
+            <article class="card kpi" data-kpi="pedidos" style="--i:1">
+              <div class="kpi__topo"><span class="kpi__icone"><svg class="icone" aria-hidden="true"><use href="#i-receipt"/></svg></span><h2>Pedidos</h2><span class="selo" data-selo></span></div>
+              <p class="kpi__valor" data-valor>—</p>
+              <p class="kpi__nota" data-nota></p>
+              <svg class="faisca" data-faisca viewBox="0 0 120 36" preserveAspectRatio="none" aria-hidden="true"></svg>
+            </article>
+            <article class="card kpi" data-kpi="ticket" style="--i:2">
+              <div class="kpi__topo"><span class="kpi__icone"><svg class="icone" aria-hidden="true"><use href="#i-bag"/></svg></span><h2>Ticket médio</h2><span class="selo" data-selo></span></div>
+              <p class="kpi__valor" data-valor>—</p>
+              <p class="kpi__nota" data-nota></p>
+              <svg class="faisca" data-faisca viewBox="0 0 120 36" preserveAspectRatio="none" aria-hidden="true"></svg>
+            </article>
+            <article class="card kpi" data-kpi="novos" style="--i:3">
+              <div class="kpi__topo"><span class="kpi__icone"><svg class="icone" aria-hidden="true"><use href="#i-users"/></svg></span><h2>Novos clientes</h2><span class="selo" data-selo></span></div>
+              <p class="kpi__valor" data-valor>—</p>
+              <p class="kpi__nota" data-nota></p>
+              <svg class="faisca" data-faisca viewBox="0 0 120 36" preserveAspectRatio="none" aria-hidden="true"></svg>
+            </article>
+          </section>
 
-          <div class="card tabela-card">
-            <!-- Se a tabela for mais larga que a tela, rola AQUI dentro e não a página toda.
-                 tabindex=0 deixa quem usa teclado rolar a região com as setas. -->
-            <div class="tabela-rolagem" role="region" aria-labelledby="titulo-pedidos" tabindex="0">
-              <table class="tabela" id="tabela-pedidos">
-                <caption class="so-leitor">Pedidos do período selecionado. Use os botões dos cabeçalhos para ordenar.</caption>
-                <thead><tr id="tabela-cabecalho"></tr></thead>
-                <tbody id="tabela-corpo"></tbody>
-              </table>
-            </div>
-
-            <div class="paginacao">
-              <p class="paginacao__resumo" id="paginacao-resumo" role="status" aria-live="polite"></p>
-              <div class="paginacao__botoes">
-                <button type="button" class="botao" id="pagina-anterior">Anterior</button>
-                <span class="paginacao__pagina" id="pagina-atual"></span>
-                <button type="button" class="botao" id="pagina-proxima">Próxima</button>
+          <!-- ===================== Receita ===================== -->
+          <section class="card bloco bloco--receita" id="receita" aria-labelledby="t-receita" style="--i:4">
+            <div class="bloco__cab">
+              <div>
+                <h2 id="t-receita" class="bloco__titulo">Receita no período</h2>
+                <p class="bloco__destaque"><span id="receita-total">—</span> <span class="selo" id="receita-selo"></span></p>
+              </div>
+              <div class="bloco__ferramentas">
+                <ul class="legenda" aria-label="Legenda">
+                  <li><span class="legenda__linha" aria-hidden="true"></span>Atual</li>
+                  <li><span class="legenda__linha legenda__linha--tracejada" aria-hidden="true"></span>Período anterior</li>
+                </ul>
+                <div class="segmentado segmentado--p" id="metrica" role="group" aria-label="Métrica do gráfico">
+                  <span class="segmentado__pilula" aria-hidden="true"></span>
+                  <button type="button" data-metrica="faturamento" aria-pressed="true">Receita</button>
+                  <button type="button" data-metrica="pedidos" aria-pressed="false">Pedidos</button>
+                </div>
               </div>
             </div>
-          </div>
-        </section>
+            <div class="grafico grafico--receita">
+              <canvas id="grafico-receita" role="img" aria-label="Gráfico de área da receita"></canvas>
+              <div class="dica" id="dica-receita" aria-hidden="true"></div>
+            </div>
+            <!-- Alternativa acessível ao canvas: os mesmos números em tabela. -->
+            <details class="dados">
+              <summary><svg class="icone icone--p" aria-hidden="true"><use href="#i-table"/></svg> Ver dados em tabela</summary>
+              <div class="dados__rolagem" tabindex="0" role="region" aria-label="Dados do gráfico de receita">
+                <table class="tabela-mini" id="tabela-receita"></table>
+              </div>
+            </details>
+          </section>
+
+          <!-- ===================== Categorias ===================== -->
+          <section class="card bloco bloco--categorias" id="categorias" aria-labelledby="t-cat" style="--i:5">
+            <div class="bloco__cab">
+              <div>
+                <h2 id="t-cat" class="bloco__titulo">Vendas por categoria</h2>
+                <p class="bloco__sub">Participação na receita</p>
+              </div>
+            </div>
+            <div class="rosca">
+              <div class="rosca__grafico">
+                <canvas id="grafico-categorias" role="img" aria-label="Gráfico de rosca das categorias"></canvas>
+                <div class="rosca__centro" aria-hidden="true"><span id="rosca-rotulo">Total</span><strong id="rosca-valor">—</strong></div>
+              </div>
+              <!-- A legenda É a tabela de dados: nome, valor e % em texto. -->
+              <ul class="rosca__legenda" id="legenda-categorias"></ul>
+            </div>
+            <p class="destaque-cat esq" id="cat-destaque"></p>
+          </section>
+
+          <!-- ===================== Produtos ===================== -->
+          <section class="card bloco bloco--produtos" id="produtos" aria-labelledby="t-prod" style="--i:6">
+            <div class="bloco__cab">
+              <div>
+                <h2 id="t-prod" class="bloco__titulo">Mais vendidos</h2>
+                <p class="bloco__sub">Por receita no período</p>
+              </div>
+            </div>
+            <ol class="ranking" id="ranking"></ol>
+          </section>
+
+          <!-- ===================== Mapa de calor ===================== -->
+          <section class="card bloco bloco--horarios" id="horarios" aria-labelledby="t-hora" style="--i:7">
+            <div class="bloco__cab">
+              <div>
+                <h2 id="t-hora" class="bloco__titulo">Pedidos por dia e horário</h2>
+                <p class="bloco__sub" id="calor-resumo">—</p>
+              </div>
+            </div>
+            <div class="calor" id="calor" role="img" aria-label="Mapa de calor de pedidos"></div>
+            <div class="calor__legenda" aria-hidden="true">
+              <span>Menos</span><i style="--v:.08"></i><i style="--v:.3"></i><i style="--v:.55"></i><i style="--v:.8"></i><i style="--v:1"></i><span>Mais</span>
+            </div>
+            <div class="dica dica--calor" id="dica-calor" aria-hidden="true"></div>
+          </section>
+
+          <!-- ===================== Atividade ===================== -->
+          <section class="card bloco bloco--atividade" id="atividade" aria-labelledby="t-ativ" style="--i:8">
+            <div class="bloco__cab">
+              <div>
+                <h2 id="t-ativ" class="bloco__titulo">Atividade recente</h2>
+                <p class="bloco__sub"><span class="ponto-vivo" aria-hidden="true"></span>Hoje, em tempo real</p>
+              </div>
+            </div>
+            <ul class="feed" id="feed"></ul>
+          </section>
+
+          <!-- ===================== Pedidos ===================== -->
+          <section class="card bloco bloco--pedidos" id="pedidos" aria-labelledby="t-ped" style="--i:9">
+            <div class="bloco__cab bloco__cab--tabela">
+              <div>
+                <h2 id="t-ped" class="bloco__titulo">Pedidos</h2>
+                <p class="bloco__sub" id="pedidos-resumo">—</p>
+              </div>
+              <div class="tabela-ferramentas">
+                <div class="campo-busca">
+                  <label class="so-leitor" for="busca-pedidos">Buscar pedidos</label>
+                  <svg class="icone icone--p" aria-hidden="true"><use href="#i-search"/></svg>
+                  <input type="search" id="busca-pedidos" placeholder="Nº, cliente, cidade…" autocomplete="off" spellcheck="false">
+                </div>
+                <button type="button" class="botao" data-acao="exportar">
+                  <svg class="icone icone--p" aria-hidden="true"><use href="#i-download"/></svg> CSV
+                </button>
+              </div>
+            </div>
+
+            <div class="chips" id="chips" role="group" aria-label="Filtrar por status"></div>
+
+            <!-- Desktop: tabela de verdade. Celular: o CSS transforma cada linha em
+                 cartão (sem rolagem lateral). Os rótulos vêm de data-rotulo. -->
+            <div class="tabela-caixa">
+              <table class="tabela" id="tabela">
+                <caption class="so-leitor">Pedidos do período. Os botões dos cabeçalhos ordenam a tabela.</caption>
+                <thead><tr id="tabela-cab"></tr></thead>
+                <tbody id="tabela-corpo"></tbody>
+              </table>
+              <div class="vazio" id="tabela-vazia" hidden>
+                <svg class="icone" aria-hidden="true"><use href="#i-search"/></svg>
+                <p><strong>Nenhum pedido encontrado</strong></p>
+                <p>Tente outro termo ou limpe os filtros.</p>
+                <button type="button" class="botao" id="limpar-filtros">Limpar filtros</button>
+              </div>
+            </div>
+
+            <nav class="paginacao" aria-label="Paginação da tabela">
+              <p class="paginacao__resumo" id="paginacao-resumo"></p>
+              <div class="paginacao__botoes" id="paginacao-botoes"></div>
+            </nav>
+          </section>
+        </div>
       </main>
 
       <footer class="rodape">
-        <a href="../../index.html">← voltar ao portfólio</a>
-        <span>Demo feita por Romeu · dados fictícios</span>
+        <a class="rodape__voltar" href="../../index.html"><svg class="icone icone--p" aria-hidden="true"><use href="#i-back"/></svg> voltar ao portfólio</a>
+        <span>Demo feita por Romeu · dados fictícios gerados com semente fixa</span>
       </footer>
     </div>
   </div>
 
-  <!-- Versão fixada do Chart.js: se a CDN publicar uma versão nova com mudanças,
-       a demo não quebra. Carregado antes dos meus scripts porque eles usam `Chart`. -->
+  <!-- ===================== Paleta de comandos ===================== -->
+  <!-- <dialog> com showModal() dá de graça: foco preso dentro, Esc fecha e o
+       resto da página fica inerte para teclado e leitor de tela. -->
+  <dialog class="paleta" id="paleta" aria-label="Paleta de comandos">
+    <div class="paleta__busca">
+      <svg class="icone" aria-hidden="true"><use href="#i-search"/></svg>
+      <input type="text" id="paleta-campo" role="combobox" aria-expanded="true" aria-controls="paleta-lista" aria-autocomplete="list" aria-activedescendant="" placeholder="Digite um comando ou busque um pedido…" autocomplete="off" spellcheck="false" aria-label="Comando">
+      <kbd class="atalho">Esc</kbd>
+    </div>
+    <ul class="paleta__lista" id="paleta-lista" role="listbox" aria-label="Comandos"></ul>
+    <div class="paleta__rodape" aria-hidden="true">
+      <span><kbd class="atalho">↑</kbd><kbd class="atalho">↓</kbd> navegar</span>
+      <span><kbd class="atalho">Enter</kbd> executar</span>
+    </div>
+  </dialog>
+
+  <!-- Notificações (toasts). aria-live: o leitor de tela lê sem roubar o foco. -->
+  <div class="toasts" id="toasts" role="status" aria-live="polite"></div>
+
+  <!-- Versão FIXADA do Chart.js: se a CDN publicar uma versão com mudanças,
+       a demo não quebra. Carregado antes porque charts.js usa `Chart`. -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <script src="data.js"></script>
+  <script src="ui.js"></script>
   <script src="charts.js"></script>
   <script src="table.js"></script>
+  <script src="palette.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

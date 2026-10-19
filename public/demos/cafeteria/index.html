@@ -2,89 +2,319 @@
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Café Sertão — Cafeteria em Feira de Santana (demo)</title>
-  <meta name="description" content="Café Sertão: cafeteria fictícia de Feira de Santana - BA. Veja o cardápio, monte seu pedido e envie pelo WhatsApp. Demo de portfólio.">
-  <meta name="theme-color" content="#4a2c1d">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Café Sertão — Cafeteria de especialidade em Feira de Santana (demo)</title>
+  <meta name="description" content="Café Sertão: cafeteria e torrefação fictícia em Feira de Santana - BA. Cardápio, cafés da casa e pedido pelo WhatsApp. Demo de portfólio feita por Romeu.">
+  <meta name="theme-color" content="#1f140d">
+  <!-- Favicon em SVG embutido: sem arquivo extra e sem 404 no console -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23a3462a'/%3E%3Cg fill='none' stroke='%23fbf8f2' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='16' cy='15' r='6'/%3E%3Cpath d='M6 22h20M9 26h14'/%3E%3C/g%3E%3C/svg%3E">
+  <!-- Fontes do par "Restaurant Menu" do banco UI/UX Pro Max: serifada de display + sans legível -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Karla:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+  <!-- A foto do hero é a maior imagem acima da dobra: pedir cedo melhora o LCP -->
+  <link rel="preload" as="image" href="img/hero-latte.webp" fetchpriority="high">
   <link rel="stylesheet" href="style.css">
+  <!-- Marca a página como "com JS" antes de pintar: só então os elementos começam escondidos para a animação.
+       Sem JS, tudo aparece normalmente (melhoria progressiva). -->
+  <script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
+  <!-- Sprite de ícones: cada <symbol> é desenhado uma vez e reutilizado com <use>. Traço no estilo Lucide. -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <symbol id="i-bag" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></symbol>
+      <symbol id="i-plus" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5v14"/></symbol>
+      <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+      <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></symbol>
+      <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol>
+      <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
+      <symbol id="i-pin" viewBox="0 0 24 24"><path d="M20 10c0 5-5.5 10.2-7.4 11.8a1 1 0 0 1-1.2 0C9.5 20.2 4 15 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></symbol>
+      <symbol id="i-msg" viewBox="0 0 24 24"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></symbol>
+      <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></symbol>
+      <symbol id="i-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></symbol>
+      <symbol id="i-arrow-ur" viewBox="0 0 24 24"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></symbol>
+      <symbol id="i-store" viewBox="0 0 24 24"><path d="M3 9 5 3h14l2 6"/><path d="M3 9h18v2a3 3 0 0 1-6 0 3 3 0 0 1-6 0 3 3 0 0 1-6 0Z"/><path d="M5 13v8h14v-8"/><path d="M10 21v-5h4v5"/></symbol>
+      <symbol id="i-bike" viewBox="0 0 24 24"><circle cx="18.5" cy="17.5" r="3.5"/><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="15" cy="5" r="1"/><path d="M12 17.5V14l-3-3 4-3 2 3h2"/></symbol>
+      <symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></symbol>
+      <symbol id="i-pause" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></symbol>
+      <symbol id="i-play" viewBox="0 0 24 24"><path d="M6 3l14 9-14 9Z"/></symbol>
+      <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+      <symbol id="i-mountain" viewBox="0 0 24 24"><path d="m8 3 4 8 5-5 5 15H2L8 3z"/></symbol>
+      <symbol id="i-flame" viewBox="0 0 24 24"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.4-.5-2-1-3-1-2.1-.2-4 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.2.4-2.3 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></symbol>
+      <symbol id="i-cup" viewBox="0 0 24 24"><path d="M10 2v2"/><path d="M14 2v2"/><path d="M6 2v2"/><path d="M16 8a1 1 0 0 1 1 1v8a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V9a1 1 0 0 1 1-1h14a4 4 0 1 1 0 8h-1"/></symbol>
+      <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/></symbol>
+      <!-- Grão de café estilizado: separador do letreiro de origens -->
+      <symbol id="i-grao" viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="6.5" ry="9.5" transform="rotate(35 12 12)"/><path d="M9 5.5c3 3.5 3 9.5 6 13"/></symbol>
+      <!-- Marca: sol se pondo sobre a linha do horizonte do sertão -->
+      <symbol id="i-marca" viewBox="0 0 32 32"><circle cx="16" cy="15" r="7"/><path d="M3 22h26"/><path d="M7 26h18"/><path d="M16 3v3"/><path d="M6.8 6.8l2.1 2.1"/><path d="M25.2 6.8l-2.1 2.1"/></symbol>
+    </defs>
+  </svg>
+
   <a class="pular" href="#cardapio">Pular para o cardápio</a>
 
-  <header class="topo">
+  <!-- Faixa da demo: deixa claro para o recrutador que o negócio é fictício e como voltar -->
+  <div class="faixa-demo">
+    <div class="container faixa-demo__linha">
+      <a href="../../index.html" class="faixa-demo__voltar">
+        <svg class="ico" aria-hidden="true"><use href="#i-arrow-left"/></svg>
+        voltar ao portfólio
+      </a>
+      <p>Demo feita por Romeu · negócio fictício</p>
+    </div>
+  </div>
+
+  <header class="topo" id="topo">
     <div class="container topo__linha">
-      <a class="marca" href="#inicio" aria-label="Café Sertão, início">☕ Café Sertão</a>
-      <nav aria-label="Principal">
-        <ul class="nav">
+      <a class="marca" href="#inicio" aria-label="Café Sertão, voltar ao início">
+        <svg class="marca__ico" aria-hidden="true"><use href="#i-marca"/></svg>
+        <span class="marca__nome">Café Sertão</span>
+      </a>
+
+      <nav class="nav" aria-label="Principal">
+        <ul>
+          <li><a href="#assinaturas">Da casa</a></li>
           <li><a href="#cardapio">Cardápio</a></li>
-          <li><a href="#sobre">Sobre</a></li>
+          <li><a href="#historia">História</a></li>
           <li><a href="#visite">Visite</a></li>
         </ul>
       </nav>
-      <!-- aria-haspopup="dialog" avisa o leitor de tela que o botão abre um diálogo -->
-      <button class="btn-carrinho" id="btn-carrinho" type="button" aria-haspopup="dialog" aria-controls="gaveta">
-        <span aria-hidden="true">🛒</span>
-        <span class="btn-carrinho__txt">Carrinho</span>
-        <span class="badge" id="badge" aria-label="0 itens">0</span>
+
+      <!-- Status ao vivo (aberto/fechado). aria-live não é usado aqui para não "falar" a cada minuto. -->
+      <p class="status" data-status>
+        <span class="status__ponto" aria-hidden="true"></span>
+        <span data-status-texto>Horários</span>
+      </p>
+
+      <button class="btn-sacola" id="btn-sacola" type="button" aria-haspopup="dialog" aria-controls="gaveta">
+        <svg class="ico" aria-hidden="true"><use href="#i-bag"/></svg>
+        <span class="btn-sacola__txt">Pedido</span>
+        <span class="contador" id="contador" data-zero="true">0</span>
+        <span class="sr-only" id="contador-sr">0 itens no pedido</span>
       </button>
     </div>
   </header>
 
   <main id="conteudo">
-    <section class="hero" id="inicio">
+    <!-- ============ HERO ============ -->
+    <section class="hero" id="inicio" aria-labelledby="t-hero">
+      <div class="hero__midia" aria-hidden="true">
+        <!-- A imagem é decorativa para o leitor de tela (o título já diz tudo); por isso alt="" -->
+        <img class="hero__img" data-parallax="0.18" src="img/hero-latte.webp" alt="" width="1920" height="1280" fetchpriority="high" decoding="async">
+      </div>
       <div class="container hero__conteudo">
-        <p class="hero__sobre">Feira de Santana · Bahia</p>
-        <h1>O cafezinho que a Feira inteira vai querer repetir.</h1>
-        <p class="hero__texto">Grãos selecionados, torra artesanal e aquele bolo de milho que lembra a casa da vó. Monte seu pedido e mande direto pelo WhatsApp.</p>
-        <a class="btn btn--primario" href="#cardapio">Ver o cardápio</a>
-      </div>
-    </section>
-
-    <section class="secao container" id="cardapio" aria-labelledby="t-cardapio">
-      <h2 id="t-cardapio">Cardápio</h2>
-
-      <div class="ferramentas">
-        <!-- role="group" + aria-label dá um nome ao conjunto de chips -->
-        <div class="chips" id="chips" role="group" aria-label="Filtrar por categoria"></div>
-        <div class="busca">
-          <label for="busca">Buscar no cardápio</label>
-          <input id="busca" type="search" placeholder="Ex.: queijo, cacau..." autocomplete="off">
+        <p class="sobretitulo hero__sobre" data-hero>Torrefação &amp; cafeteria · Feira de Santana — BA</p>
+        <h1 id="t-hero" class="hero__titulo">
+          <span class="linha"><span data-hero>Café do sertão,</span></span>
+          <span class="linha"><em data-hero>torrado devagar.</em></span>
+        </h1>
+        <p class="hero__texto" data-hero>Grãos de pequenos produtores da Bahia, torra semanal em lotes pequenos e o bolo de milho que lembra a casa da vó. Escolha, monte seu pedido e mande direto no WhatsApp.</p>
+        <div class="hero__acoes" data-hero>
+          <a class="btn btn--claro" href="#cardapio">
+            Ver o cardápio
+            <svg class="ico" aria-hidden="true"><use href="#i-arrow"/></svg>
+          </a>
+          <a class="btn btn--vidro" href="#historia">Nossa história</a>
         </div>
       </div>
-
-      <!-- aria-live: leitores de tela anunciam quantos itens sobraram depois do filtro -->
-      <p class="resultado" id="resultado" aria-live="polite"></p>
-      <ul class="grade" id="grade"></ul>
-    </section>
-
-    <section class="secao secao--creme" id="sobre" aria-labelledby="t-sobre">
-      <div class="container texto-centro">
-        <h2 id="t-sobre">Sobre nós</h2>
-        <p>O Café Sertão nasceu da vontade de juntar o café especial com o jeito acolhedor do interior baiano. Trabalhamos com pequenos produtores, torramos em lotes pequenos e servimos tudo com carinho. <em>(Negócio fictício, criado para esta demo.)</em></p>
+      <div class="container" data-hero>
+        <dl class="hero__fatos">
+          <div><dt>Origens baianas</dt><dd>4</dd></div>
+          <div><dt>Torra</dt><dd>Semanal</dd></div>
+          <div><dt>Desde</dt><dd>2019</dd></div>
+        </dl>
       </div>
     </section>
 
-    <section class="secao container" id="visite" aria-labelledby="t-visite">
-      <h2 id="t-visite">Horários e endereço</h2>
-      <div class="info">
-        <div class="cartao">
-          <h3>Horários</h3>
-          <ul class="lista-simples">
-            <li><span>Segunda a sexta</span> <strong>07h – 19h</strong></li>
-            <li><span>Sábado</span> <strong>08h – 20h</strong></li>
-            <li><span>Domingo</span> <strong>08h – 13h</strong></li>
-          </ul>
+    <!-- ============ LETREIRO DE ORIGENS ============ -->
+    <!-- O conteúdo é duplicado no JS para o loop ficar contínuo; a cópia recebe aria-hidden. -->
+    <section class="letreiro" aria-label="Origens dos nossos grãos">
+      <div class="letreiro__trilho" id="letreiro">
+        <ul class="letreiro__lista">
+          <li>Chapada Diamantina <small>BA</small></li>
+          <li>Piatã <small>BA</small></li>
+          <li>Planalto da Conquista <small>BA</small></li>
+          <li>Barra do Choça <small>BA</small></li>
+          <li>Matas de Minas <small>MG</small></li>
+          <li>Cerrado Mineiro <small>MG</small></li>
+          <li>Caparaó <small>ES</small></li>
+          <li>Alta Mogiana <small>SP</small></li>
+        </ul>
+      </div>
+      <!-- WCAG 2.2.2: conteúdo que se move por mais de 5 s precisa poder ser pausado -->
+      <button class="letreiro__pausa" id="letreiro-pausa" type="button" aria-pressed="false">
+        <svg class="ico" aria-hidden="true"><use href="#i-pause"/></svg>
+        <span class="sr-only">Pausar animação do letreiro</span>
+      </button>
+    </section>
+
+    <!-- ============ ASSINATURAS ============ -->
+    <section class="secao" id="assinaturas" aria-labelledby="t-assinaturas">
+      <div class="container">
+        <div class="cabeca" data-reveal>
+          <p class="sobretitulo">Assinaturas da casa</p>
+          <h2 id="t-assinaturas" class="titulo-secao">Três xícaras que explicam <em>quem a gente é.</em></h2>
+          <p class="cabeca__texto">Receitas criadas no nosso balcão, com ingredientes do sertão baiano. Se é sua primeira vez aqui, comece por uma delas.</p>
         </div>
-        <div class="cartao">
-          <h3>Endereço</h3>
-          <address>
-            Rua das Gameleiras, 123 — Centro<br>
-            Feira de Santana — BA, 44000-000<br>
-            <small>Endereço fictício.</small>
+        <ol class="assinaturas" id="assinaturas-lista"></ol>
+      </div>
+    </section>
+
+    <!-- ============ CARDÁPIO ============ -->
+    <section class="secao secao--papel" id="cardapio" aria-labelledby="t-cardapio">
+      <div class="container">
+        <div class="cabeca cabeca--linha" data-reveal>
+          <div>
+            <p class="sobretitulo">Cardápio</p>
+            <h2 id="t-cardapio" class="titulo-secao">Feito hoje, <em>servido agora.</em></h2>
+          </div>
+          <p class="cabeca__texto">Toque em <strong>Adicionar</strong> para montar o pedido. Você revisa tudo antes de enviar.</p>
+        </div>
+
+        <div class="ferramentas" data-reveal>
+          <!-- role="group" + aria-label dá nome ao conjunto; cada chip usa aria-pressed (botão alternável) -->
+          <div class="chips" id="chips" role="group" aria-label="Filtrar por categoria"></div>
+          <div class="busca">
+            <label class="sr-only" for="busca">Buscar no cardápio</label>
+            <svg class="ico busca__ico" aria-hidden="true"><use href="#i-search"/></svg>
+            <input id="busca" type="search" placeholder="Buscar: rapadura, coalho…" autocomplete="off" enterkeyhint="search">
+          </div>
+        </div>
+
+        <!-- aria-live: o leitor de tela anuncia quantos itens sobraram depois do filtro -->
+        <p class="resultado" id="resultado" aria-live="polite"></p>
+        <ul class="grade" id="grade"></ul>
+      </div>
+    </section>
+
+    <!-- ============ HISTÓRIA ============ -->
+    <section class="secao historia" id="historia" aria-labelledby="t-historia">
+      <div class="container historia__grade">
+        <figure class="historia__foto" data-reveal>
+          <img src="img/barista-latte.webp" alt="Mãos de barista segurando uma xícara branca com latte art em forma de folha" width="1000" height="1250" loading="lazy" decoding="async">
+        </figure>
+        <div class="historia__texto">
+          <p class="sobretitulo" data-reveal>Nossa história</p>
+          <h2 id="t-historia" class="titulo-secao" data-reveal>A Bahia planta café bom. <em>A gente só tira do caminho.</em></h2>
+          <p data-reveal>O Café Sertão nasceu de uma pergunta simples: por que o melhor café da Chapada Diamantina viaja para o mundo inteiro e quase nunca chega à xícara de quem mora em Feira? Hoje compramos direto de seis famílias produtoras, torramos toda segunda-feira e servimos o que há de mais fresco.</p>
+          <p data-reveal>Sem pressa, sem açúcar escondido, sem frescura. Só café com origem, comida de forno e gente que gosta de conversar.</p>
+          <p class="nota" data-reveal>Negócio fictício, criado para esta demo de portfólio.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ DO GRÃO À XÍCARA (faixa com parallax) ============ -->
+    <section class="processo" aria-labelledby="t-processo">
+      <div class="processo__midia" aria-hidden="true">
+        <img data-parallax="0.12" src="img/graos.webp" alt="" width="1400" height="900" loading="lazy" decoding="async">
+      </div>
+      <div class="container processo__conteudo">
+        <h2 id="t-processo" class="titulo-secao" data-reveal>Do grão à xícara, <em>em três passos.</em></h2>
+        <ol class="passos">
+          <li data-reveal>
+            <svg class="ico ico--grande" aria-hidden="true"><use href="#i-mountain"/></svg>
+            <h3>Origem</h3>
+            <p>Compramos direto do produtor, pagando acima do mercado por lotes com nota acima de 84 pontos.</p>
+          </li>
+          <li data-reveal>
+            <svg class="ico ico--grande" aria-hidden="true"><use href="#i-flame"/></svg>
+            <h3>Torra</h3>
+            <p>Lotes de 5 kg toda segunda. O perfil é ajustado para cada origem, nunca uma torra única para tudo.</p>
+          </li>
+          <li data-reveal>
+            <svg class="ico ico--grande" aria-hidden="true"><use href="#i-cup"/></svg>
+            <h3>Preparo</h3>
+            <p>Receitas pesadas na balança e grãos moídos na hora. Café bom é repetível, não sorte.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ============ DEPOIMENTOS ============ -->
+    <section class="secao" id="depoimentos" aria-labelledby="t-depoimentos">
+      <div class="container">
+        <div class="cabeca" data-reveal>
+          <p class="sobretitulo">Quem passa, volta</p>
+          <h2 id="t-depoimentos" class="titulo-secao">O que dizem <em>no balcão.</em></h2>
+        </div>
+        <ul class="depoimentos">
+          <li data-reveal>
+            <figure>
+              <p class="estrelas" role="img" aria-label="Nota 5 de 5"><svg aria-hidden="true"><use href="#i-star"/></svg><svg aria-hidden="true"><use href="#i-star"/></svg><svg aria-hidden="true"><use href="#i-star"/></svg><svg aria-hidden="true"><use href="#i-star"/></svg><svg aria-hidden="true"><use href="#i-star"/></svg></p>
+              <blockquote><p>“O latte de rapadura virou meu ritual de sexta. Tem gosto de infância, mas com café de verdade.”</p></blockquote>
+              <figcaption><strong>Marina A.</strong><span>Cliente desde 2021</span></figcaption>
+            </figure>
+          </li>
+          <li data-reveal>
+            <figure>
+              <p class="estrelas" role="img" aria-label="Nota 5 de 5"><svg aria-hidden="true"><use href="#i-star"/></svg><svg aria-hidden="true"><use href="#i-star"/></svg><svg aria-hidden="true"><use href="#i-star"/></svg><svg aria-hidden="true"><use href="#i-star"/></svg><svg aria-hidden="true"><use href="#i-star"/></svg></p>
+              <blockquote><p>“Pedi pelo WhatsApp às 7h10 e às 7h25 estava na minha mão. O cold brew é absurdo de bom.”</p></blockquote>
+              <figcaption><strong>Rafael S.</strong><span>Pede para retirar</span></figcaption>
+            </figure>
+          </li>
+          <li data-reveal>
+            <figure>
+              <p class="estrelas" role="img" aria-label="Nota 5 de 5"><svg aria-hidden="true"><use href="#i-star"/></svg><svg aria-hidden="true"><use href="#i-star"/></svg><svg aria-hidden="true"><use href="#i-star"/></svg><svg aria-hidden="true"><use href="#i-star"/></svg><svg aria-hidden="true"><use href="#i-star"/></svg></p>
+              <blockquote><p>“Finalmente um lugar em Feira que explica de onde vem o café. E o bolo de milho com coalho… sem palavras.”</p></blockquote>
+              <figcaption><strong>Joana P.</strong><span>Trabalha do salão às terças</span></figcaption>
+            </figure>
+          </li>
+        </ul>
+        <p class="nota nota--centro">Depoimentos ilustrativos.</p>
+      </div>
+    </section>
+
+    <!-- ============ GALERIA ============ -->
+    <section class="secao secao--sem-topo" aria-labelledby="t-galeria">
+      <div class="container">
+        <h2 id="t-galeria" class="sr-only">Galeria do salão</h2>
+        <ul class="galeria">
+          <li class="galeria__item galeria__item--largo" data-reveal>
+            <img src="img/salao.webp" alt="Salão claro com mesas de madeira, banquetas e luminárias pendentes" width="1200" height="900" loading="lazy" decoding="async">
+          </li>
+          <li class="galeria__item galeria__item--alto" data-reveal>
+            <img src="img/pessoas.webp" alt="Duas pessoas conversando à mesa de madeira, segurando xícaras de café" width="1000" height="1250" loading="lazy" decoding="async">
+          </li>
+          <li class="galeria__item" data-reveal>
+            <img src="img/paes.webp" alt="Pães rústicos de fermentação natural numa cesta de vime" width="720" height="900" loading="lazy" decoding="async">
+          </li>
+          <li class="galeria__item" data-reveal>
+            <img src="img/croissant.webp" alt="Croissants dourados com pote de mel ao lado" width="720" height="900" loading="lazy" decoding="async">
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ============ VISITE ============ -->
+    <section class="secao visite" id="visite" aria-labelledby="t-visite">
+      <div class="container visite__grade">
+        <div class="visite__intro" data-reveal>
+          <p class="sobretitulo sobretitulo--claro">Visite</p>
+          <h2 id="t-visite" class="titulo-secao">Puxe uma cadeira.<br> <em>O café já está passando.</em></h2>
+          <p class="status status--grande" data-status>
+            <span class="status__ponto" aria-hidden="true"></span>
+            <span data-status-texto>Horários</span>
+          </p>
+          <address class="endereco">
+            <svg class="ico" aria-hidden="true"><use href="#i-pin"/></svg>
+            <span>Rua das Gameleiras, 123 — Centro<br>Feira de Santana — BA, 44001-000<br><small>Endereço fictício</small></span>
           </address>
+          <a class="btn btn--claro" href="https://www.google.com/maps/search/?api=1&amp;query=Feira+de+Santana+BA" target="_blank" rel="noopener">
+            Como chegar
+            <svg class="ico" aria-hidden="true"><use href="#i-arrow-ur"/></svg>
+            <span class="sr-only">(abre o Google Maps em nova aba)</span>
+          </a>
+        </div>
+        <div class="horarios" data-reveal>
+          <h3 class="horarios__titulo">
+            <svg class="ico" aria-hidden="true"><use href="#i-clock"/></svg>
+            Horário de funcionamento
+          </h3>
+          <!-- Tabela de verdade: dia x horário é dado tabular, e o leitor de tela agradece -->
+          <table class="horarios__tabela">
+            <caption class="sr-only">Horário de funcionamento por dia da semana</caption>
+            <tbody id="horarios"></tbody>
+          </table>
         </div>
       </div>
     </section>
@@ -92,44 +322,132 @@
 
   <footer class="rodape">
     <div class="container">
-      <p>© 2026 Café Sertão (negócio fictício)</p>
-      <p>Demo feita por Romeu — <a href="../../index.html">← voltar ao portfólio</a></p>
+      <div class="rodape__topo">
+        <p class="rodape__marca">Café<br><em>Sertão</em></p>
+        <div class="rodape__colunas">
+          <div>
+            <h2 class="rodape__titulo">Navegar</h2>
+            <ul>
+              <li><a href="#assinaturas">Da casa</a></li>
+              <li><a href="#cardapio">Cardápio</a></li>
+              <li><a href="#historia">História</a></li>
+              <li><a href="#visite">Visite</a></li>
+            </ul>
+          </div>
+          <div>
+            <h2 class="rodape__titulo">Esta demo</h2>
+            <ul>
+              <li><a href="../../index.html">← voltar ao portfólio</a></li>
+              <li>Demo feita por Romeu</li>
+              <li>HTML, CSS e JS puros</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <p class="rodape__creditos">
+        Fotos: Unsplash —
+        <a href="https://unsplash.com/photos/f4xw98lSblg" target="_blank" rel="noopener">Maria Phoenix</a>,
+        <a href="https://unsplash.com/photos/RFHFV7lVQBY" target="_blank" rel="noopener">Jonas Jacobsson</a>,
+        <a href="https://unsplash.com/photos/GzwqrTKPzQA" target="_blank" rel="noopener">Wenceslao Moya Grondona de Luca</a>,
+        <a href="https://unsplash.com/photos/Xtj7o_V5p-s" target="_blank" rel="noopener">Hannah Reid</a>,
+        <a href="https://unsplash.com/photos/9ok3UPT8UuY" target="_blank" rel="noopener">Jamie Long</a>,
+        <a href="https://unsplash.com/photos/OSLnJG62isk" target="_blank" rel="noopener">Sarah Swainson</a>,
+        <a href="https://unsplash.com/photos/LJPAmUnE-QM" target="_blank" rel="noopener">Rob Wingate</a>,
+        <a href="https://unsplash.com/photos/yD_P3ON8QeU" target="_blank" rel="noopener">Hannah Busing</a>,
+        <a href="https://unsplash.com/photos/K_Fey0KMSqk" target="_blank" rel="noopener">Jess Bailey</a>,
+        <a href="https://unsplash.com/photos/NDD5Pdo4-wQ" target="_blank" rel="noopener">Tommao Wang</a>,
+        <a href="https://unsplash.com/photos/oSnpMJZBqVI" target="_blank" rel="noopener">Markus Winkler</a>,
+        <a href="https://unsplash.com/photos/Lyt6AJZmUWs" target="_blank" rel="noopener">Marke</a>,
+        <a href="https://unsplash.com/photos/q0UBzw-FKE4" target="_blank" rel="noopener">Markus Spiske</a>,
+        <a href="https://unsplash.com/photos/g86airJZ4Gs" target="_blank" rel="noopener">Priscilla Du Preez</a>,
+        <a href="https://unsplash.com/photos/QfTpbOey94s" target="_blank" rel="noopener">Pete Willis</a>,
+        <a href="https://unsplash.com/photos/O1NH3Sw8u8k" target="_blank" rel="noopener">Brett Wharton</a>.
+      </p>
+      <p class="rodape__base">© 2026 Café Sertão — negócio fictício. Demo de portfólio feita por Romeu.</p>
     </div>
   </footer>
 
-  <!-- Fundo escurecido atrás da gaveta; clicar nele fecha o carrinho -->
-  <div class="veu" id="veu" hidden></div>
+  <!-- Barra fixa do pedido no celular: atalho para o carrinho sem precisar rolar até o topo -->
+  <div class="barra-pedido" id="barra-pedido" hidden>
+    <button class="barra-pedido__btn" type="button" id="barra-pedido-btn" aria-haspopup="dialog" aria-controls="gaveta">
+      <span class="barra-pedido__qtd" id="barra-qtd">0</span>
+      <span>Ver pedido</span>
+      <strong id="barra-total">R$ 0,00</strong>
+    </button>
+  </div>
 
-  <!-- Gaveta do carrinho: role="dialog" + aria-modal="true" dizem que o resto da página está "bloqueado" -->
-  <aside class="gaveta" id="gaveta" role="dialog" aria-modal="true" aria-labelledby="t-carrinho" tabindex="-1">
-    <div class="gaveta__topo">
-      <h2 id="t-carrinho">Seu pedido</h2>
-      <button class="btn-fechar" id="btn-fechar" type="button" aria-label="Fechar carrinho">✕</button>
+  <!-- Aviso (toast). role="status" = aria-live polite: o leitor de tela lê sem interromper -->
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <!-- Gaveta do pedido: <dialog> nativo + showModal() já dá foco preso, Esc e fundo inerte "de graça" -->
+  <dialog class="gaveta" id="gaveta" aria-labelledby="t-gaveta">
+    <div class="gaveta__painel" id="gaveta-painel">
+      <div class="gaveta__topo">
+        <div>
+          <p class="sobretitulo">Seu pedido</p>
+          <h2 id="t-gaveta" class="gaveta__titulo">Revise e envie</h2>
+        </div>
+        <button class="btn-icone" id="btn-fechar" type="button" aria-label="Fechar pedido">
+          <svg class="ico" aria-hidden="true"><use href="#i-x"/></svg>
+        </button>
+      </div>
+
+      <div class="gaveta__corpo">
+        <div class="vazio" id="vazio">
+          <svg class="ico ico--grande" aria-hidden="true"><use href="#i-cup"/></svg>
+          <p><strong>Seu pedido está vazio.</strong><br>Que tal começar por um espresso?</p>
+          <button class="btn btn--contorno" type="button" id="btn-ver-cardapio">Ver o cardápio</button>
+        </div>
+        <ul class="itens" id="itens"></ul>
+
+        <form class="pedido" id="pedido" novalidate>
+          <fieldset class="opcoes">
+            <legend>Como prefere receber?</legend>
+            <label class="opcao">
+              <input type="radio" name="entrega" value="Retirada no balcão" checked>
+              <span class="opcao__caixa">
+                <svg class="ico" aria-hidden="true"><use href="#i-store"/></svg>
+                <span><strong>Retirar</strong><small>Pronto em ~15 min</small></span>
+              </span>
+            </label>
+            <label class="opcao">
+              <input type="radio" name="entrega" value="Entrega">
+              <span class="opcao__caixa">
+                <svg class="ico" aria-hidden="true"><use href="#i-bike"/></svg>
+                <span><strong>Entrega</strong><small>Centro e arredores</small></span>
+              </span>
+            </label>
+          </fieldset>
+
+          <div class="campo">
+            <label for="nome">Seu nome</label>
+            <input id="nome" name="nome" type="text" autocomplete="given-name" placeholder="Como podemos te chamar?" aria-describedby="erro-nome">
+            <p class="campo__erro" id="erro-nome"></p>
+          </div>
+          <!-- Só aparece na entrega: menos campos = menos atrito -->
+          <div class="campo" id="campo-endereco" hidden>
+            <label for="endereco">Endereço de entrega</label>
+            <input id="endereco" name="endereco" type="text" autocomplete="street-address" placeholder="Rua, número e bairro" aria-describedby="erro-endereco">
+            <p class="campo__erro" id="erro-endereco"></p>
+          </div>
+          <div class="campo">
+            <label for="obs">Observações <span class="opcional">(opcional)</span></label>
+            <textarea id="obs" name="obs" rows="2" placeholder="Ex.: leite sem lactose, sem canela…"></textarea>
+          </div>
+        </form>
+      </div>
+
+      <div class="gaveta__rodape">
+        <p class="subtotal"><span>Subtotal</span> <strong id="subtotal">R$ 0,00</strong></p>
+        <p class="erro-geral" id="erro-geral" role="alert"></p>
+        <button class="btn btn--whats" id="btn-whats" type="submit" form="pedido">
+          <svg class="ico" aria-hidden="true"><use href="#i-msg"/></svg>
+          Pedir no WhatsApp
+        </button>
+        <p class="nota nota--centro">Abre o WhatsApp com a mensagem pronta. Número fictício.</p>
+      </div>
     </div>
-
-    <div class="gaveta__corpo">
-      <p class="vazio" id="vazio">Seu carrinho está vazio. Que tal um cafezinho? ☕</p>
-      <ul class="itens" id="itens"></ul>
-
-      <form class="pedido" id="pedido" autocomplete="off">
-        <fieldset>
-          <legend>Como prefere receber?</legend>
-          <label class="radio"><input type="radio" name="entrega" value="Retirada na loja" checked> Retirada na loja</label>
-          <label class="radio"><input type="radio" name="entrega" value="Entrega"> Entrega</label>
-        </fieldset>
-        <label for="nome">Seu nome</label>
-        <input id="nome" name="nome" type="text" required placeholder="Como podemos te chamar?">
-        <label for="obs">Observações (opcional)</label>
-        <textarea id="obs" name="obs" rows="2" placeholder="Ex.: sem açúcar, endereço de entrega..."></textarea>
-      </form>
-    </div>
-
-    <div class="gaveta__rodape">
-      <p class="subtotal"><span>Subtotal</span> <strong id="subtotal">R$ 0,00</strong></p>
-      <p class="erro" id="erro" role="alert"></p>
-      <button class="btn btn--whats" id="btn-whats" type="button">Pedir no WhatsApp</button>
-    </div>
-  </aside>
+  </dialog>
 
   <script src="data.js"></script>
   <script src="app.js"></script>

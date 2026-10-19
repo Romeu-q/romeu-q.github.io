@@ -5,100 +5,232 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Pixel Shop — packs de pixel art para devs indie (demo)</title>
   <meta name="description" content="Demo de loja fictícia de packs de pixel art, feita por Romeu com HTML, CSS e JavaScript puros.">
+  <meta name="theme-color" content="#0f0f23">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 8 8%22 shape-rendering=%22crispEdges%22%3E%3Cpath fill=%22%235c3d00%22 d=%22M2 0h4v1H2zM1 1h1v1H1zM6 1h1v1H6zM0 2h1v4H0zM7 2h1v4H7zM1 6h1v1H1zM6 6h1v1H6zM2 7h4v1H2z%22/%3E%3Cpath fill=%22%23ffd23f%22 d=%22M2 1h4v1H2zM1 2h6v4H1zM2 6h4v1H2z%22/%3E%3Cpath fill=%22%23fff3b0%22 d=%22M2 2h1v2H2z%22/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&amp;family=VT323&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Pixelify+Sans:wght@400&amp;family=Silkscreen&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/loja.css">
+  <!-- Ordem importa: dados e sprites primeiro, a aplicação por último. `defer`
+       mantém a ordem e não bloqueia a renderização do HTML. -->
+  <script src="js/data.js" defer></script>
+  <script src="js/sprites.js" defer></script>
+  <script src="js/cart.js" defer></script>
+  <script src="js/ui.js" defer></script>
+  <script src="js/hero.js" defer></script>
+  <script src="js/app.js" defer></script>
 </head>
 <body>
   <a class="pular" href="#vitrine">Pular para os packs</a>
 
   <!-- Faixa fixa lembrando que nada aqui é real -->
-  <p class="faixa-demo">DEMO &middot; loja fictícia &middot; nenhum pagamento real</p>
-
-  <!-- Tudo que fica "atrás" dos diálogos: recebe `inert` quando um está aberto -->
-  <div id="pagina">
-    <header class="topo">
-      <a class="logo" href="#" aria-label="Pixel Shop — início">
-        <span id="logo-sprite" class="logo__sprite"></span>
-        <span class="logo__texto">PIXEL<br>SHOP</span>
-      </a>
-      <button type="button" class="botao botao--carrinho" id="btn-carrinho" aria-haspopup="dialog">
-        <span aria-hidden="true">&#128722;</span>
-        Carrinho
-        <span class="selo" id="selo-carrinho">0</span>
-      </button>
-    </header>
-
-    <main id="conteudo">
-      <section class="hero" aria-labelledby="hero-titulo">
-        <p class="hero__piscando" aria-hidden="true">&#9654; INSERT COIN</p>
-        <h1 id="hero-titulo" class="hero__titulo">Packs de pixel art para devs indie</h1>
-        <p class="hero__texto">Tilesets, personagens, interfaces e efeitos prontos para o seu próximo jogo. Escolha, jogue no projeto e siga criando.</p>
-        <a class="botao botao--primario" href="#vitrine">Ver os packs</a>
-      </section>
-
-      <section class="vitrine" id="vitrine" aria-labelledby="vitrine-titulo">
-        <h2 id="vitrine-titulo" class="secao-titulo">Vitrine</h2>
-
-        <div class="controles">
-          <div class="filtros" role="group" aria-label="Filtrar por categoria" id="filtros"></div>
-          <div class="ordem">
-            <label for="ordem">Ordenar por</label>
-            <select id="ordem">
-              <option value="novos">Mais novos</option>
-              <option value="preco-asc">Preço: menor primeiro</option>
-              <option value="preco-desc">Preço: maior primeiro</option>
-              <option value="nome">Nome (A-Z)</option>
-            </select>
-          </div>
-        </div>
-
-        <p class="contagem" id="contagem" role="status"></p>
-        <ul class="grade" id="grade"></ul>
-      </section>
-    </main>
-
-    <footer class="rodape">
-      <p>Demo feita por Romeu &mdash; <a href="../../index.html">&larr; voltar ao portfólio</a></p>
-      <p class="rodape__nota">Packs, preços e cupons são fictícios. Nenhum dado é enviado a lugar nenhum.</p>
-    </footer>
-  </div>
-
-  <!-- Modal do produto -->
-  <div class="camada" id="camada-modal" hidden>
-    <div class="caixa caixa--modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-titulo" tabindex="-1">
-      <button type="button" class="fechar" data-fechar aria-label="Fechar detalhes">&times;</button>
-      <div class="modal__previa" id="modal-previa"></div>
-      <div class="modal__corpo">
-        <p class="etiqueta" id="modal-categoria"></p>
-        <h2 id="modal-titulo" class="modal__titulo"></h2>
-        <p id="modal-descricao"></p>
-        <h3 class="modal__sub">O que vem no pack</h3>
-        <ul class="lista-inclui" id="modal-inclui"></ul>
-        <p class="licenca"><strong>Licença:</strong> <span id="modal-licenca"></span></p>
-        <div class="modal__acao">
-          <p class="preco preco--grande" id="modal-preco"></p>
-          <button type="button" class="botao botao--primario" id="modal-add"></button>
-        </div>
-      </div>
+  <div class="faixa-demo">
+    <div class="faixa-demo__dentro">
+      <a class="faixa-demo__voltar" href="../../index.html"><span class="seta-voltar" data-icone="voltar"></span>voltar ao portfólio</a>
+      <p>Projeto de portfólio · loja fictícia · nenhum pagamento é real</p>
     </div>
   </div>
 
-  <!-- Gaveta do carrinho -->
-  <div class="camada camada--gaveta" id="camada-gaveta" hidden>
-    <aside class="caixa caixa--gaveta" id="gaveta" role="dialog" aria-modal="true" aria-labelledby="gaveta-titulo" tabindex="-1">
-      <button type="button" class="fechar" data-fechar aria-label="Fechar carrinho">&times;</button>
-      <div id="gaveta-conteudo"></div>
-    </aside>
-  </div>
+  <header class="topo">
+    <div class="topo__dentro">
+      <a class="logo" href="#inicio" aria-label="Pixel Shop, início">
+        <span class="logo__moeda" id="logo-moeda"></span>
+        <span class="logo__texto">Pixel<span>Shop</span></span>
+      </a>
+      <nav class="topo__nav" aria-label="Seções">
+        <a href="#vitrine">Packs</a>
+        <a href="#por-que">Licença e arquivos</a>
+      </nav>
+      <button type="button" class="btn-carrinho" id="btn-carrinho" aria-haspopup="dialog" aria-controls="gaveta">
+        <span data-icone="carrinho"></span>
+        <span class="btn-carrinho__rotulo">Carrinho</span>
+        <span class="btn-carrinho__selo" id="selo-carrinho" aria-hidden="true">0</span>
+        <span class="sr" id="sr-carrinho">vazio</span>
+      </button>
+    </div>
+  </header>
 
-  <!-- Avisos curtos para leitores de tela e para quem enxerga -->
-  <div class="aviso" id="aviso" role="status" aria-live="polite"></div>
+  <main id="inicio">
+    <!-- ===== Herói ===== -->
+    <section class="hero" aria-labelledby="hero-titulo">
+      <div class="hero__texto">
+        <p class="eyebrow"><span class="eyebrow__ponto" aria-hidden="true"></span>Coleção de outono · 12 packs</p>
+        <h1 id="hero-titulo" class="hero__titulo">Pixel art pronta para o seu <span class="destaque-texto">próximo jogo</span></h1>
+        <p class="hero__sub">Tilesets, personagens, interfaces e efeitos desenhados à mão, com arquivos <strong>.aseprite</strong> editáveis e licença comercial. Baixe, arraste para o motor e volte a criar.</p>
+        <div class="hero__acoes">
+          <a class="btn btn--primario" href="#vitrine">Explorar packs <span data-icone="seta"></span></a>
+          <button type="button" class="btn btn--cupom" id="copiar-cupom">
+            <span data-icone="tag"></span>
+            <span>Cupom <strong>PIXEL10</strong> · 10% off</span>
+          </button>
+        </div>
+        <ul class="hero__provas">
+          <li><strong>.aseprite</strong><span>camadas e tags</span></li>
+          <li><strong>Comercial</strong><span>licença simples</span></li>
+          <li><strong>Imediato</strong><span>download na hora</span></li>
+        </ul>
+      </div>
 
-  <script src="data.js"></script>
-  <script src="sprites.js"></script>
-  <script src="cart.js"></script>
-  <script src="app.js"></script>
+      <div class="hero__cena">
+        <div class="cena" id="cena">
+          <canvas id="cena-canvas" aria-hidden="true"></canvas>
+          <div class="cena__hud" aria-hidden="true">
+            <span>SCORE <b id="cena-pontos">000000</b></span>
+            <span class="cena__vidas"><i></i><i></i><i></i></span>
+          </div>
+          <p class="sr">Cena animada em pixel art: um cavaleiro corre por uma floresta à noite pegando moedas, perseguido por um slime.</p>
+        </div>
+        <button type="button" class="flutuante flutuante--a" data-abrir="nave-cometa">
+          <span class="flutuante__sprite" data-sprite="nave-cometa"></span>
+          <span><small>Lançamento</small>Nave Cometa</span>
+        </button>
+        <button type="button" class="flutuante flutuante--b" data-abrir="floresta-encantada">
+          <span class="flutuante__sprite" data-sprite="floresta-encantada"></span>
+          <span><small>−25% esta semana</small>Floresta Encantada</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ===== Compatibilidade ===== -->
+    <section class="compat" aria-label="Ferramentas compatíveis">
+      <p>Funciona com</p>
+      <ul>
+        <li>Godot</li><li>Unity</li><li>GameMaker</li><li>Aseprite</li><li>Tiled</li><li>LDtk</li>
+      </ul>
+    </section>
+
+    <!-- ===== Vitrine ===== -->
+    <section class="vitrine" id="vitrine" aria-labelledby="vitrine-titulo" tabindex="-1">
+      <div class="vitrine__topo">
+        <div>
+          <h2 id="vitrine-titulo" class="titulo-secao">Vitrine</h2>
+          <p class="vitrine__sub">Passe o mouse para ver os sprites ganharem vida. Clique para inspecionar pixel a pixel.</p>
+        </div>
+        <label class="busca">
+          <span class="sr">Buscar packs</span>
+          <span data-icone="busca"></span>
+          <input type="search" id="busca" placeholder="Buscar packs…" autocomplete="off" spellcheck="false">
+          <kbd aria-hidden="true">/</kbd>
+        </label>
+      </div>
+
+      <div class="controles">
+        <div class="filtros" id="filtros" role="group" aria-label="Filtrar por categoria"></div>
+        <div class="ordem">
+          <label for="ordem">Ordenar</label>
+          <div class="select">
+            <select id="ordem">
+              <option value="destaques">Destaques</option>
+              <option value="novos">Mais novos</option>
+              <option value="preco-asc">Menor preço</option>
+              <option value="preco-desc">Maior preço</option>
+              <option value="nome">Nome (A–Z)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <p class="contagem" id="contagem" role="status" aria-live="polite"></p>
+      <ul class="grade" id="grade" aria-label="Packs"></ul>
+
+      <div class="vazio" id="vazio" hidden>
+        <span class="vazio__sprite" id="vazio-sprite"></span>
+        <h3>Nenhum pack por aqui</h3>
+        <p id="vazio-texto">Tente outra busca ou categoria.</p>
+        <button type="button" class="btn btn--secundario" id="limpar-filtros">Limpar busca e filtros</button>
+      </div>
+    </section>
+
+    <!-- ===== Por que ===== -->
+    <section class="por-que" id="por-que" aria-labelledby="por-que-titulo">
+      <h2 id="por-que-titulo" class="titulo-secao">Feito por quem faz jogo</h2>
+      <ul class="beneficios">
+        <li>
+          <span class="beneficio__icone" data-icone="arquivo"></span>
+          <h3>Arquivos de verdade</h3>
+          <p>Cada pack vem com o .aseprite original, camadas nomeadas e tags de animação — nada de PNG achatado.</p>
+        </li>
+        <li>
+          <span class="beneficio__icone" data-icone="escudo"></span>
+          <h3>Licença sem letra miúda</h3>
+          <p>Use em jogos comerciais, sem limite de vendas. Só não revenda os arquivos. Simples assim.</p>
+        </li>
+        <li>
+          <span class="beneficio__icone" data-icone="raio"></span>
+          <h3>Atualizações grátis</h3>
+          <p>Quando um pack ganha sprites novos, quem já comprou recebe sem pagar nada a mais.</p>
+        </li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="rodape">
+    <div class="rodape__dentro">
+      <p class="rodape__marca"><span class="logo__texto">Pixel<span>Shop</span></span></p>
+      <p>Demo feita por Romeu · HTML, CSS e JavaScript puros, sprites desenhados em código.</p>
+      <p class="rodape__nota">Packs, preços e cupons são fictícios. Nenhum dado sai do seu navegador.</p>
+      <a class="rodape__voltar" href="../../index.html"><span data-icone="voltar"></span>voltar ao portfólio</a>
+    </div>
+  </footer>
+
+  <!-- ===== Modal do produto (dialog nativo: showModal deixa o fundo inerte) ===== -->
+  <dialog class="dialogo dialogo--modal" id="modal" aria-labelledby="mp-titulo">
+    <div class="veu" data-fechar></div>
+    <div class="painel painel--modal">
+      <button type="button" class="btn-icone painel__fechar" data-fechar aria-label="Fechar detalhes"><span data-icone="fechar"></span></button>
+
+      <div class="mp__palco">
+        <div class="mp__tela" id="mp-tela">
+          <div class="mp__sprite" id="mp-sprite"></div>
+        </div>
+        <div class="mp__ferramentas">
+          <div class="segmentado" role="group" aria-label="Zoom da prévia">
+            <button type="button" data-zoom="1" aria-pressed="false">1x</button>
+            <button type="button" data-zoom="2" aria-pressed="true">2x</button>
+            <button type="button" data-zoom="4" aria-pressed="false">4x</button>
+          </div>
+          <button type="button" class="btn-icone btn-icone--claro" id="mp-grade" aria-pressed="false" aria-label="Mostrar grade de pixels"><span data-icone="grade"></span></button>
+          <button type="button" class="btn-icone btn-icone--claro" id="mp-play" aria-pressed="false" aria-label="Pausar animação"><span data-icone="pausa"></span></button>
+          <span class="mp__quadro" id="mp-quadro" aria-hidden="true">1/4</span>
+        </div>
+      </div>
+
+      <div class="mp__info">
+        <p class="mp__cat" id="mp-cat"></p>
+        <h2 class="mp__titulo" id="mp-titulo" tabindex="-1"></h2>
+        <p class="mp__desc" id="mp-desc"></p>
+
+        <h3 class="mp__sub">Paleta <span class="mp__sub-dica">clique para copiar o hex</span></h3>
+        <ul class="paleta" id="mp-paleta"></ul>
+
+        <h3 class="mp__sub">O que vem no pack</h3>
+        <ul class="inclui" id="mp-inclui"></ul>
+
+        <h3 class="mp__sub">Licença</h3>
+        <p class="mp__licenca" id="mp-licenca"></p>
+
+        <div class="mp__compra">
+          <p class="preco preco--grande" id="mp-preco"></p>
+          <button type="button" class="btn btn--primario" id="mp-add"></button>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- ===== Gaveta do carrinho ===== -->
+  <dialog class="dialogo dialogo--gaveta" id="gaveta" aria-labelledby="gaveta-titulo">
+    <div class="veu" data-fechar></div>
+    <div class="painel painel--gaveta">
+      <header class="gaveta__topo">
+        <h2 id="gaveta-titulo" tabindex="-1">Seu carrinho</h2>
+        <button type="button" class="btn-icone" data-fechar aria-label="Fechar carrinho"><span data-icone="fechar"></span></button>
+      </header>
+      <div class="gaveta__conteudo" id="gaveta-conteudo"></div>
+    </div>
+  </dialog>
+
+  <!-- Avisos (toasts). É movido para dentro do diálogo aberto, senão ficaria
+       atrás da camada do modal e inerte para leitores de tela. -->
+  <div class="toasts" id="toasts" role="status" aria-live="polite"></div>
 </body>
 </html>

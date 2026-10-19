@@ -181,49 +181,52 @@ export const PROJECTS: Project[] = [
   {
     id: "demo-cafeteria",
     title: "Café Sertão",
-    kind: "Demo · Landing page",
+    kind: "Demo · Landing page de cafeteria",
     demo: true,
-    summary: "Landing page de cafeteria com cardápio filtrável, busca, carrinho e pedido montado direto para o WhatsApp.",
-    howToTest: "Filtre o cardápio, adicione itens e abra o carrinho.",
+    summary: "Landing page de uma torrefação baiana fictícia: hero com parallax, cardápio filtrável com busca, carrinho com animação \"voando\" até a sacola e pedido montado direto no WhatsApp.",
+    howToTest: "Filtre o cardápio, adicione itens (veja a animação) e finalize o pedido no carrinho.",
     details: [
-      "Site fictício para mostrar o tipo de projeto que um pequeno negócio pediria: rápido, bonito no celular e que transforma visita em pedido.",
-      "O carrinho guarda o estado no <code>localStorage</code>, a gaveta lateral é acessível (foco preso, Esc fecha, foco volta ao botão) e o botão final monta a mensagem do pedido e abre o WhatsApp."
+      "Landing page pensada para converter visita em pedido: fotografia em destaque, tipografia editorial (Playfair Display + Karla) e paleta creme/espresso/terracota com contraste AA medido em todos os pares de cor. O status \"Aberto agora / Fechado\" é calculado em tempo real a partir dos horários.",
+      "O carrinho fica no <code>localStorage</code> e abre numa gaveta acessível (<code>&lt;dialog&gt;</code> nativo, foco preso, Esc fecha e o foco volta). O formulário valida nome, mostra endereço só para entrega e monta a mensagem do WhatsApp com <code>encodeURIComponent</code>.",
+      "Animações só com CSS e a Web Animations API (sem biblioteca): item voando até o carrinho, mola na gaveta, entradas ao rolar. Tudo respeita <code>prefers-reduced-motion</code>. Fotos do Unsplash com crédito aos fotógrafos."
     ],
-    highlights: ["Filtro por categoria + busca sem acento", "Carrinho persistente", "Gaveta acessível", "Mensagem com encodeURIComponent"],
-    tags: ["HTML", "CSS", "JavaScript", "localStorage"],
-    shots: [{ src: "assets/img/projetos/cafeteria.webp", alt: "Landing page do Café Sertão com hero e cardápio." }],
-    links: { ...noLinks, demo: "demos/cafeteria/index.html" }
+    highlights: ["Filtro + busca sem acento", "Fly-to-cart com Web Animations API", "Gaveta acessível com <dialog>", "Status de funcionamento em tempo real", "Responsivo de 320 a 1440px"],
+    tags: ["HTML", "CSS", "JavaScript", "Web Animations API", "Acessibilidade"],
+    shots: [{ src: "assets/img/projetos/cafeteria.webp", alt: "Hero do Café Sertão: foto de latte art em fundo escuro e o título 'Café do sertão, torrado devagar.'" }],
+    links: { ...noLinks, demo: "demos/cafeteria/index.html", github: "https://github.com/Romeu-q/romeu-q.github.io/tree/main/public/demos/cafeteria" }
   },
   {
     id: "demo-dashboard",
-    title: "Painel de vendas",
-    kind: "Demo · Dashboard",
+    title: "Sabiá Analytics",
+    kind: "Demo · Dashboard SaaS",
     demo: true,
-    summary: "Painel administrativo com KPIs, gráficos (Chart.js), tabela com busca, ordenação e paginação, e tema claro/escuro.",
-    howToTest: "Troque o período, alterne o tema e ordene a tabela.",
+    summary: "Painel de vendas no estilo SaaS: KPIs com contagem animada e sparklines, gráficos Chart.js, mapa de calor, tabela com busca/filtros/ordenação, exportação CSV, paleta de comandos (Ctrl+K) e tema claro/escuro.",
+    howToTest: "Troque o período (7d/30d/12m), aperte Ctrl+K, filtre a tabela e exporte o CSV.",
     details: [
-      "Todos os números são calculados a partir de uma lista de pedidos gerada com um gerador pseudoaleatório com semente: os dados parecem reais, mas são sempre os mesmos a cada visita.",
-      "Mostra agregação de dados, gráficos que trocam de cor junto com o tema e uma tabela acessível (cabeçalhos ordenáveis por teclado, <code>aria-sort</code>)."
+      "Cerca de 21 mil pedidos gerados com um gerador pseudoaleatório com semente (sazonalidade, picos de almoço e fim de semana): os dados parecem reais e são sempre os mesmos. Todo número na tela é calculado a partir desses pedidos brutos, inclusive a comparação com o período anterior.",
+      "Tabela com busca que ignora acentos e destaca o termo, filtros por status, cabeçalhos ordenáveis por teclado (<code>aria-sort</code>), paginação e exportação dos resultados filtrados em CSV (Blob). Paleta de comandos com <code>&lt;dialog&gt;</code>, skeleton ao trocar de período e números que fazem tween.",
+      "Tema escuro e claro com contraste AA nos dois, gráficos que trocam de cor junto com o tema e tabela alternativa para leitores de tela."
     ],
-    highlights: ["Agregações sem números fixos", "Chart.js", "Busca com debounce", "Tema com variáveis CSS"],
+    highlights: ["Agregações a partir de dados brutos", "Chart.js com comparação de período", "Ctrl+K command palette", "Exportação CSV com Blob", "Tema claro/escuro persistente"],
     tags: ["JavaScript", "Chart.js", "CSS", "Acessibilidade"],
-    shots: [{ src: "assets/img/projetos/dashboard.webp", alt: "Painel de vendas com KPIs, gráfico de faturamento e tabela de pedidos." }],
-    links: { ...noLinks, demo: "demos/dashboard/index.html" }
+    shots: [{ src: "assets/img/projetos/dashboard.webp", alt: "Sabiá Analytics em tema escuro: KPIs com sparklines, gráfico de receita e donut de vendas por categoria." }],
+    links: { ...noLinks, demo: "demos/dashboard/index.html", github: "https://github.com/Romeu-q/romeu-q.github.io/tree/main/public/demos/dashboard" }
   },
   {
     id: "demo-pixel-shop",
     title: "Pixel Shop",
-    kind: "Demo · E-commerce",
+    kind: "Demo · E-commerce para devs indie",
     demo: true,
-    summary: "Loja fictícia de assets pixel art para devs indie: vitrine com filtros, modal de produto e carrinho com cupom.",
-    howToTest: "Abra um produto, adicione ao carrinho e use o cupom PIXEL10.",
+    summary: "Loja de packs de pixel art com cena animada no hero, sprites animados desenhados em canvas, filtros com animação de layout, cards com tilt 3D, modal com zoom e carrinho com cupom.",
+    howToTest: "Abra um pack (teste o zoom), adicione ao carrinho e use o cupom PIXEL10.",
     details: [
-      "As miniaturas dos produtos não são imagens: são desenhadas em <code>&lt;canvas&gt;</code> a partir de grades de texto, o mesmo princípio que uso para criar sprites.",
-      "Modal e carrinho acessíveis, estado salvo no <code>localStorage</code> e um checkout de mentira, claramente marcado como demonstração."
+      "Nenhuma imagem de produto é arquivo: cada sprite é desenhado em <code>&lt;canvas&gt;</code> a partir de grades de texto, com 2 a 4 quadros de animação, e só anima quando está visível na tela. O hero é uma cena com parallax em que o cavaleiro pula para pegar moedas.",
+      "Filtro por categoria com animação de layout (FLIP), ordenação, busca, modal com zoom 1x/2x/4x e grade de pixels, carrinho com \"desfazer\", cupom e um checkout de demonstração com confete em pixel art.",
+      "Modal e carrinho com <code>&lt;dialog&gt;</code> nativo, foco preso e retorno de foco; animações com a Web Animations API e uma mola calculada em código, tudo desligado com <code>prefers-reduced-motion</code>."
     ],
-    highlights: ["Sprites desenhados de dados", "Modal acessível", "Filtro + ordenação", "Carrinho com cupom"],
-    tags: ["JavaScript", "Canvas", "localStorage"],
-    shots: [{ src: "assets/img/projetos/pixel-shop.webp", alt: "Vitrine da Pixel Shop com produtos em pixel art." }],
-    links: { ...noLinks, demo: "demos/pixel-shop/index.html" }
+    highlights: ["Sprites animados em canvas a partir de dados", "FLIP layout animation", "Tilt 3D só em dispositivos com mouse", "Carrinho com desfazer e cupom", "Diálogos acessíveis"],
+    tags: ["JavaScript", "Canvas", "Web Animations API", "localStorage"],
+    shots: [{ src: "assets/img/projetos/pixel-shop.webp", alt: "Hero da Pixel Shop: cena noturna em pixel art com um cavaleiro, slime e moedas, ao lado do título 'Pixel art pronta para o seu próximo jogo'." }],
+    links: { ...noLinks, demo: "demos/pixel-shop/index.html", github: "https://github.com/Romeu-q/romeu-q.github.io/tree/main/public/demos/pixel-shop" }
   }
 ];
