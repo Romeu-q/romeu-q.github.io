@@ -69,14 +69,4 @@ Painel de um e-commerce fictício de alimentos artesanais (cafés, queijos, doce
 | `palette.js` | Paleta de comandos |
 | `app.js` | Estado e ligação entre os módulos (fluxo em uma direção: estado → dados → tela) |
 
-## Como rodar
-
-Abra `index.html` no navegador. É preciso internet para carregar o Chart.js e a fonte. Se preferir um servidor local, rode na pasta `demos/dashboard`:
-
-```
-npx http-server -p 8772
-```
-
----
-
 Demo feita por Romeu · dados fictícios.
