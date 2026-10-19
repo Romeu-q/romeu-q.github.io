@@ -57,13 +57,13 @@ export const PROFILE: Profile = {
 export const REEL: Reel = {
   title: "Verity — Ato I (beta)",
   video: "", // TODO: "assets/video/verity-reel.mp4" (recomendado: < 8 MB, 720p)
-  poster: "assets/img/verity/captura-viagem.webp",
+  poster: "assets/img/verity/gameplay-viagem.webp",
   // Gravações reais do jogo; cada uma vira uma aba no reel
   clips: [
     {
       label: "A viagem",
       gif: "assets/img/verity/verity_viagem.gif",
-      poster: "assets/img/verity/captura-viagem.webp",
+      poster: "assets/img/verity/gameplay-viagem.webp",
       alt: "Gameplay de Verity: Emil dirige a ambulância pela estrada ao pôr do sol, entre Grauwick e a Fundição Kessel."
     },
     {
@@ -127,7 +127,7 @@ export const PROJECTS: Project[] = [
     tags: ["Godot 4", "GDScript", "Game design", "Narrativa", "Pixel art"],
     shots: [
       { src: "assets/img/verity/abertura-4.webp", alt: "Cutscene em pixel art: ambulância chegando a uma cidade industrial com chaminés e refugiados na estrada.", caption: "Cutscene de abertura: chegada a Grauwick", pixel: true },
-      { src: "assets/img/verity/captura-viagem.webp", alt: "Gameplay: a ambulância na estrada ao pôr do sol, com HUD de combustível e munição.", caption: "Gameplay: a viagem de ambulância entre as fases" },
+      { src: "assets/img/verity/gameplay-viagem.webp", alt: "Gameplay: a ambulância na estrada ao pôr do sol, com HUD de combustível e munição.", caption: "Gameplay: a viagem de ambulância entre as fases", pixel: true },
       { src: "assets/img/verity/abertura-1.webp", alt: "Cutscene: silhueta de um homem segurando uma criança diante de uma cidade em chamas.", caption: "Cutscene de abertura", pixel: true },
       { src: "assets/img/verity/abertura-3.webp", alt: "Cutscene: motorista de boina e cachecol vermelho dirigindo sob chuva.", caption: "Cutscene de abertura", pixel: true },
       { src: "assets/img/verity/gameplay-kessel.webp", alt: "Gameplay na Fundição Kessel: interior escuro iluminado só por uma lâmpada e pela lanterna.", caption: "Gameplay: Fundição Kessel, só com a lanterna", pixel: true },
